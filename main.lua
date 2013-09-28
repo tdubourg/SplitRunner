@@ -15,4 +15,4 @@ physics.start()
 
 system.activate("multitouch")
 
-
+print('Hello World')
