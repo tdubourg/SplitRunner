@@ -1,0 +1,22 @@
+-- build.settings for project: SplitRun
+-- Managed with http://CoronaProjectManager.com
+-- Copyright 2013 . All Rights Reserved.
+-- cpmgen build.settings
+settings =
+{
+	android =
+	{
+		versionCode = "4.1"
+	},
+
+	orientation =
+	{
+		default ="landscapeRight",
+		content = "landscapeRight",
+		supported =
+		{
+			"landscapeRight"
+		},
+	},
+
+}
