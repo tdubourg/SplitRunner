@@ -54,32 +54,22 @@ timer.performWithDelay(1, update, -1)
 local background = display.newRect( 0, 0, display.viewableContentWidth, display.viewableContentHeight)
 background:setFillColor( 255, 255, 255, 0 )
 
-local player = Player.new()
-player = player:create("player", 50, 300, 1)
-local player2 = Player.new()
-player2 = player2:create("player2", 50, 50, -1)
+local player = Player.new("player", 50, 300, 1)
+local player2 = Player.new("player2", 50, 50, -1)
 
 local function onTouch( event )
     local o
     local velocity
-    local jumpImpulsion = 150
     local middleHeight = display.viewableContentHeight / 2
     if event.y > middleHeight then
-        o = player
-        velocity = jumpImpulsion * -1
+        p = player
     else
-        o = player2
-        velocity = jumpImpulsion
+        p = player2
     end
+
+    -- condition equivalent to a check of "onKeyDown", in order not to repeat the action when the touch event lasts
     if "began" == event.phase then
-        o.isFocus = true
-        o:setLinearVelocity(0, velocity)
-    elseif o.isFocus then
-        if "moved" == event.phase then
-            -- nowt
-        elseif "ended" == phase or "cancelled" == phase then
-            o.isFocus = false
-        end
+        p:jump()
     end
 
     -- Return true if the touch event has been handled.
