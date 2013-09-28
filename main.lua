@@ -18,6 +18,8 @@ require("Player")
 require("Ground")
 require("Obstacle")
 
+require("Effects")
+
 system.activate("multitouch")
 
 
@@ -76,12 +78,38 @@ local function onTouch( event )
     return true
 end
 
+local function stopSmokeEffect(effect)
+    --effect:stop("smoke")
+    effect:destroy()
+    effect=nil
+end
+
 local function onCollision( event )
     local type1 = event.object1.objectType
     local type2 = event.object2.objectType
     --print("collision between " .. type1 .. " and " .. type2)
-    if type1 == "player" or type2 == "obstacle" then
-        --print("collision")
+    if (type1 == "obstacle" and type2 == "ground") or (type2 == "obstacle" and type1 == "ground") then
+        -- objet auquel on va attacher la fumée
+        print(event.force)
+        local toAttach
+        if (type1 == "obstacle") then
+            toAttach = event.object1
+         else
+            toAttach = event.object2
+        end
+        local smokeXPosition = toAttach.x - 20
+        local smokeYPosition
+        if (toAttach.y < 100) then
+            smokeYPosition = 15
+        else
+            smokeYPosition = display.viewableContentHeight - 20
+        end
+        local smokeEffect = getSmokeEffect(smokeXPosition, smokeYPosition)
+        smokeEffect:start("smoke")
+        local stopEffectClosure = function()
+            return smokeEffect:stop("smoke")
+        end
+        timer.performWithDelay(200, stopEffectClosure)
     else
     end
 end
@@ -157,61 +185,30 @@ local function createWheels(y)
     local ratio = width / nbWheels
     for i = 1,6 do
         local xPosition = (ratio * i) - (ratio / 2)
-        local wheel = display.newRect(0, 0, 20, 20)
+        local wheel = display.newImage("assets/roue.png")
         wheel.x = xPosition
+        wheel.width = 30
+        wheel.height = 30
         -- random initial rotation
         wheel.rotation = math.random(0, 180)
         wheel.y = y
-        print(wheel.height)
-        wheel:setFillColor(0, 0, 255)
         table.insert(wheels, wheel)
     end
 end
 
 local function onEnterFrameWheels()
     for i, wheel in ipairs(wheels) do
-        wheel.rotation = wheel.rotation + 3
+        wheel.rotation = wheel.rotation - 3
     end
 end
 
 -- top wheels
-createWheels(0  )
+createWheels(0)
 -- bottom wheels
 createWheels(display.viewableContentHeight)
 
 Runtime:addEventListener( "enterFrame", onEnterFrameWheels)
 
 
---[[
-CBE=require("CBEffects.Library")
-local heavy_rain=CBE.VentGroup{
-    {
-        preset="sparks",
-        title="explosion",
-        build=function()
-            local shape=display.newImageRect("Textures/particle_with_trail.png", 5, 30)
-            shape:setReferencePoint(display.CenterLeftReferencePoint)
-            return shape
-        end,
-        onCreation=function(particle)
-            particle:applyForce((math.random(-10, 10)/25), (math.random(-10, 10)/25))
-        end,
-        color={{255, 255, 0}},
-        positionType="atPoint",
-        perEmit=6,
-        onDeath=function()end,
-        rotateTowardVel=true,
-        physics={
-            sizeY=-0.02,
-            velocity=2,
-            gravityY=0.05,
-            iterateAngle=true,
-            autoAngle=false,
-            angles={
-                0, 60, 120, 180, 240, 300
-            }
-        }
-    },
-}
-heavy_rain:start("explosion")
-]]
+
+
