@@ -12,9 +12,13 @@ end
 
 function Obstacle:create()
     local gravityScale = 1
+    local targetY = display.viewableContentHeight / 2
     local random = math.random()
     if random > 0.5 then
         gravityScale = -1
+        targetY = targetY - 40
+    else
+        targetY = targetY + 40
     end
     random = math.random()
     local isLarge = false
@@ -40,7 +44,7 @@ function Obstacle:create()
         obstacle.height = 40
     end
     obstacle.x = display.viewableContentWidth + 40
-    obstacle.y = display.viewableContentHeight / 2
+    obstacle.y = targetY
     obstacle.rotation = math.random(0, 180)
     obstacle:setFillColor ( 122, 122, 122  )
     obstacle.objectType = "obstacle"

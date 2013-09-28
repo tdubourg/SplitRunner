@@ -27,9 +27,11 @@ system.activate("multitouch")
 local background = display.newImage("images/background.png")
 background.x = 240
 background.y = 160
-local midBackground = display.newImage("images/bgfar1.png")
-midBackground.x = 480
+local midBackground = display.newImage("assets/splitrunner-02.jpg")
+midBackground.x = 240
 midBackground.y = 160
+midBackground.width = display.viewableContentWidth;
+midBackground.height = display.viewableContentHeight;
 
 local function updateBackgrounds()
 	--move backgrounds
@@ -61,10 +63,29 @@ player = player:create("player", 50, 300, 1)
 local player2 = Player.new()
 player2 = player2:create("player2", 50, 50, -1)
 
+
+
+-- BONUS 1
+local function activateBonus1(gravityScale)
+    for i, obstacle in ipairs(obstacles) do
+        obstacle.gravityScale = gravityScale * 8
+    end
+    local restoreObstacleGravityClosure = function()
+        for i, obstacle in ipairs(obstacles) do
+            obstacle.gravityScale = gravityScale
+        end
+        return
+    end
+    timer.performWithDelay(500, restoreObstacleGravityClosure)
+end
+
+
+
 local function onTouch( event )
     local o
     local velocity
     local jumpImpulsion = 150
+    activateBonus1(-1)
     local middleHeight = display.viewableContentHeight / 2
     if event.y > middleHeight then
         o = player
@@ -86,12 +107,6 @@ local function onTouch( event )
 
     -- Return true if the touch event has been handled.
     return true
-end
-
-local function stopSmokeEffect(effect)
-    --effect:stop("smoke")
-    effect:destroy()
-    effect=nil
 end
 
 local function onCollision( event )
@@ -117,7 +132,10 @@ local function onCollision( event )
         local smokeEffect = getSmokeEffect(smokeXPosition, smokeYPosition)
         smokeEffect:start("smoke")
         local stopEffectClosure = function()
-            return smokeEffect:stop("smoke")
+            smokeEffect:stop("smoke")
+            smokeEffect:destroy()
+            smokeEffect=nil
+            return
         end
         timer.performWithDelay(200, stopEffectClosure)
     else
