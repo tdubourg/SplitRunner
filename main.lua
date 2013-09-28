@@ -104,9 +104,8 @@ end
 
 local isPlayer1
 local isPlayer2
-function checkSwipeDirection()	            \
-isPlayer1 = false				
-isPlayer2 = false				
+function checkSwipeDirection()	isPlayer1 = false				
+    isPlayer2 = false				
 local middleHeight = display.viewableContentHeight / 2
 if beginY > middleHeight then
        isPlayer1 = true
