@@ -2,25 +2,30 @@ local physics = require( "physics" )
 
 Player = {}
 
-Player.__index = Playerfunction Player.new(args) -- constructor
+Player.__index = Player
+PLAYER_HORIZONTAL_VELOCITY = 0
+JUMP_VELOCITY = 150
+PLAYER_HORIZONTAL_VELOCITY = 0
+function Player.new(objectType, x, y, gravityScale)
     local self = {}
     setmetatable(self, Player)
-    return self
-end
-
-function Player:create( objectType, x, y, gravityScale)
-    local object
+    self.coronaObject = nil
     local collisionFilter = { categoryBits = 2, maskBits = 5 } -- collides with player only
     local body = { filter=collisionFilter }
-    object = display.newRect(  x, y, 20, 20)
-    object.y = y
-    object:setFillColor(0, 255, 0)
-    object.objectType = objectType
-    physics.addBody ( object, "dynamic", body )
-    --object.isFixedRotation = true
+    self.coronaObject = display.newRect(  x, y, 20, 20)
+    self.coronaObject .y = y
+    self.coronaObject :setFillColor(0, 255, 0)
+    self.coronaObject .objectType = objectType
+    physics.addBody ( self.coronaObject , "dynamic", body )
+--    self.anim = Anim.new('boy')
+    --self.coronaObject .isFixedRotation = true
 
     --physics.addBody( rect, "dynamic" )
 
-    object.gravityScale = gravityScale
-    return object
+    self.coronaObject.gravityScale = gravityScale
+    return self
+end
+
+function Player:jump()
+    self.coronaObject:setLinearVelocity(PLAYER_HORIZONTAL_VELOCITY, self.coronaObject.gravityScale * (-1) * JUMP_VELOCITY)
 end
