@@ -8,7 +8,7 @@ application =
 	{
 		width = 320,
 		height = 480,
-		scale = "letterbox",
+		--scale = "letterbox",
 		fps = 30,
 		antialias = true,
 		xalign = "center",
