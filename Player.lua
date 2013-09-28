@@ -2,9 +2,7 @@ local physics = require( "physics" )
 
 Player = {}
 
-Player.__index = Player
-
-function Player.new(args) -- constructor
+Player.__index = Playerfunction Player.new(args) -- constructor
     local self = {}
     setmetatable(self, Player)
     return self
