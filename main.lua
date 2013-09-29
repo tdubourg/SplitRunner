@@ -33,12 +33,7 @@ setBackgrounds()
 -- Set the background color to white  
 local background = display.newRect( 0, 0, display.viewableContentWidth, display.viewableContentHeight)
 background:setFillColor( 255, 255, 255,0 )
-
-local beginX 
-local beginY  
-local endX  
-local endY 
- 
+
 local xDistance  
 local yDistance
  
@@ -162,24 +157,24 @@ local function onCollision( event )
     end
 end
 
-function checkSwipeDirection()
+function checkSwipeDirection(event)
     local isPlayer1 = false
     local isPlayer2 = false
     local middleHeight = display.viewableContentHeight / 2
-    if (beginY == nil) then
-        return
-    end
-    if beginY > middleHeight then
+   -- if (beginY == nil) then
+      --  return
+    --end
+    if event.yStart > middleHeight then
         isPlayer1 = true
     else
         isPlayer2 = true
     end
     if bDoingTouch == true then
-        xDistance =  math.abs(endX - beginX) -- math.abs will return the absolute, or non-negative value, of a given value.
-        yDistance =  math.abs(endY - beginY)
+        xDistance =  math.abs(event.x - event.xStart) -- math.abs will return the absolute, or non-negative value, of a given value.
+        yDistance =  math.abs(event.y - event.yStart)
         if xDistance > yDistance then
-                if beginX > endX then
-                    totalSwipeDistanceLeft = beginX - endX
+                if event.xStart > event.x then
+                    totalSwipeDistanceLeft = event.xStart - event.x
                 if totalSwipeDistanceLeft > minSwipeDistance then
                 if isPlayer1 == true then
                     native.showAlert("test","Swiped Left Player1")
@@ -188,7 +183,7 @@ function checkSwipeDirection()
                     end
                 end
             else
-                totalSwipeDistanceRight = endX - beginX
+                totalSwipeDistanceRight = event.x - event.xStart
                 if totalSwipeDistanceRight > minSwipeDistance then
                     if isPlayer1 == true then
                         native.showAlert("test","Swiped Right Player1")
@@ -198,19 +193,19 @@ function checkSwipeDirection()
                 end
             end
         else
-         if beginY > endY then
-                totalSwipeDistanceUp = beginY - endY
+         if event.yStart > event.y then
+                totalSwipeDistanceUp = event.yStart - event.y
                 if totalSwipeDistanceUp > minSwipeDistance then
                     if isPlayer1 == true then
-                        --native.showAlert("test","Player1 Attack")
+                        native.showAlert("test","Player1 Attack")
                         playerB:activateBonus(-1)
                     end
                 end
              else
-                totalSwipeDistanceDown = endY - beginY
+                totalSwipeDistanceDown = event.y - event.yStart
                 if totalSwipeDistanceDown > minSwipeDistance then
                    if isPlayer2 == true then
-                        --native.showAlert("test","Player2 Attack")
+                        native.showAlert("test","Player2 Attack")
                        playerT:activateBonus(1)
                    end
                 end
@@ -220,15 +215,15 @@ function checkSwipeDirection()
  end
  
  function swipe(event)
-    if event.phase == "began" then
+    if event.phase == "began" then
         bDoingTouch = true
-        beginX = event.x
-        beginY = event.y
-        end
+        --beginX = event.x
+        --beginY = event.y
+     end
     if event.phase == "ended"  then
-        endX = event.x
-        endY = event.y
-        checkSwipeDirection();
+        --endX = event.x
+        --endY = event.y
+        checkSwipeDirection(event);
         bDoingTouch = false
     end
 end
