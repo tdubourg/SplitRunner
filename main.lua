@@ -54,8 +54,7 @@ local totalSwipeDistanceUp
 local totalSwipeDistanceDown
 
 local player = Player.new("player", 50, 300, 1)
-local player2 = Player.new("player2", 50, 50, -1)
-
+local player2 = Player.new("player", 50, 50, -1)
 
 
 -- BONUS 1
@@ -77,6 +76,7 @@ end
 local function onTouch( event )
     local o
     local velocity
+    --activateBonus1(-1)
     local middleHeight = display.viewableContentHeight / 2
     if event.y > middleHeight then
         p = player
@@ -121,7 +121,14 @@ local function onCollision( event )
             return
         end
         timer.performWithDelay(200, stopEffectClosure)
-    else
+    elseif (type1 == "player" and type2 == "ground") or (type2 == "player" and type1 == "ground") then
+        local player
+        if (type1 == "player") then
+            player = event.object1.playerObject
+        else
+            player = event.object2.playerObject
+        end
+        player:resetDoubleJumpCounter()
     end
 end
 
@@ -264,6 +271,17 @@ local function createWheels(y)
     local width = display.viewableContentWidth;
     local nbWheels = 6
     local ratio = width / nbWheels
+    local tapis = display.newImage("assets/tapis.png")
+    tapis.width = display.viewableContentWidth;
+    tapis.height = 40
+    tapis.y = y
+    tapis.x = tapis.width / 2
+    local offset = 5
+    if (y < 100) then
+       tapis.y = tapis.y - offset
+    else
+        tapis.y = tapis.y + offset
+    end
     for i = 1,6 do
         local xPosition = (ratio * i) - (ratio / 2)
         local wheel = display.newImage("assets/roue.png")
@@ -279,7 +297,7 @@ end
 
 local function onEnterFrameWheels()
     for i, wheel in ipairs(wheels) do
-        wheel.rotation = wheel.rotation - 3
+        wheel.rotation = wheel.rotation - 4
     end
 end
 
@@ -289,7 +307,4 @@ createWheels(0)
 createWheels(display.viewableContentHeight)
 
 Runtime:addEventListener( "enterFrame", onEnterFrameWheels)
-
-
-
 
