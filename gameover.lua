@@ -6,15 +6,13 @@ local function onTouch(event)
     return true
 end
 
-POS_X_WIDGET_BUTTON = 0.2973958333333333
-POS_Y_WIDGET_BUTTON = 0.6407407407407407
+POS_X_WIDGET_BUTTON = 0.3173958333333333
+POS_Y_WIDGET_BUTTON = 0.6907407407407407
 WIDTH_RATIO_WIDGET_BUTTON = 0.4182291666666667
 HEIGHT_RATIO_WIDGET_BUTTON = 0.1861111111111111
 
 function scene:enterScene(event)
     local group = self.view
-
-    print ( "\n\n\n\n\n\n POUETPOUETPOUET \n\n\n\n")
 
     -- display a background image
     local background = display.newImageRect("images/startscreen.png", display.contentWidth, display.contentHeight)
@@ -23,12 +21,12 @@ function scene:enterScene(event)
     background:addEventListener("touch", onTouch);
 
     local myText = display.newText(group,
-        "Player " .. WinnerPlayer.name .. " WINS",
+        WinnerPlayer.name .. " WINS",
         0,
         200,
         native.systemFont,
-        16)
-    myText:setTextColor(0, 255, 0)
+        25)
+    myText:setTextColor(66, 33, 11)
     myText:setReferencePoint( display.TopLeftReferencePoint )
     myText.x = display.contentWidth*POS_X_WIDGET_BUTTON
     myText.y = display.contentHeight*POS_Y_WIDGET_BUTTON

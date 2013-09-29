@@ -1,3 +1,5 @@
+local BonusManagerTimer
+
 BonusManager = {}
 
 BonusManager.__index = BonusManager
@@ -14,9 +16,6 @@ function BonusManager.new(args) -- constructor
 end
 
 function BonusManager:activateBonus(bonus, x, y)
---    print("BonusManager.activateBonus")
-    --bonus:removeSelf()
-
     if (bonus.effectDone == true) then
        return
     end
@@ -34,10 +33,10 @@ function BonusManager:activateBonus(bonus, x, y)
 end
 
 function BonusManager:removeBonus(bonus)
-    print("BonusManager.activateBonus")
     bonus:removeSelf()
 end
-function setBonusImages(object)	if (object.hiddenType == 1) then
+function setBonusImages(object)
+	if (object.hiddenType == 1) then
         object.image = "fall.png"   
     elseif (object.hiddenType == 2) then
         object.image = "blind.png"   
@@ -61,6 +60,7 @@ end
     local body = { friction=0.5, bounce=0.2 , filter=collisionFilter }
     physics.addBody( object, "static", body )
     table.insert(bonuses, object)
+    level1Scene:insert(object)
     return object
 end
 
@@ -91,4 +91,9 @@ local function onEnterFrameBonusManager(event)
     end
 end
 
-Runtime:addEventListener( "enterFrame", onEnterFrameBonusManager)
+function BonusManager:cancelTimersAndListeners()
+    Runtime:removeEventListener("enterFrame", onEnterFrameBonusManager)
+end
+
+
+BonusManagerTimer = Runtime:addEventListener( "enterFrame", onEnterFrameBonusManager)

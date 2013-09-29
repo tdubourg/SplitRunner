@@ -38,7 +38,10 @@ local totalSwipeDistanceDown
 local gameIsOver = false
 local MainUpdateTimer
 local ObstacleTimer
-local level1Scene
+local topGround
+local ground
+local middleGround
+level1Scene = nil
 
 PLAYER_SPAWN_IN_PERCENTAGE_OF_WIDTH = 70
 PLAYER_TOP_SPAWNY = 50
@@ -104,7 +107,7 @@ local function onCollision( event )
         if (type1 == "bonus") then bonus = event.object1 else bonus = event.object2 end
         if (type1 == "player") then player = event.object1.playerObject else player = event.object2.playerObject end
         if (type1 == "player") then coronaObject = event.object1 else coronaObject = event.object2 end
-        bonusManager:activateBonus(bonus, coronaObject.x, coronaObject.y)
+        bonusManager:activateBonus(bonus, bonus.x - 10, bonus.y)
         player:assignBonus(bonus)
     else
         player, collider = nil, nil
@@ -200,34 +203,19 @@ function checkSwipeDirection(event)
         bDoingTouch = false
     end
 end
- 
-background:addEventListener("touch", swipe)
 
--- GROUNDS
-local topGround = Ground.new()
-topGround = topGround:create(10)
 
-local ground = Ground.new()
-ground = ground:create(display.viewableContentHeight - 10)
 
---[[
-local middleGround = Ground.new()
-middleGround = middleGround:create(display.viewableContentHeight / 2)
+local middleGround = display.newRect(0 ,0, display.viewableContentWidth * 3, 2);
+middleGround.x = 0
+middleGround.y = display.viewableContentHeight / 2 + 7
 middleGround:setFillColor ( 0, 0, 0  )
-]]
-local middleGround = display.newRect(0 ,0, display.viewableContentWidth, 5);
-middleGround.y = display.viewableContentHeight / 2
-middleGround:setFillColor ( 0, 0, 0  )
-Runtime:addEventListener ( "collision", onCollision )
-
--- Only the background receives touches. 
-background:addEventListener( "touch", onTouch)
 
 
 
 -- OBSTACLES
 -- random obstacles
-obstacles = {}
+obstacles = nil
 local function generateObstacle()
     local obstacle = Obstacle.new()
     obstacle = obstacle:create()
@@ -240,14 +228,21 @@ local function obstacleTimer()
     if random > 0.7 then
        generateObstacle()
     end
-    timer.performWithDelay(500, obstacleTimer)
 end
 
 -- animation des obstacles existants
 local function onEnterFrameObstacles(event)
     local velocity = 2
     for i, obstacle in ipairs(obstacles) do
-        obstacle.x = obstacle.x - velocity
+        if (obstacle.x == nil) then
+            --
+        else
+            if (obstacle.x < -80 or obstacle.y < 0) then
+                obstacle:removeSelf()
+                break
+            end
+            obstacle.x = obstacle.x - velocity
+        end
     end
 end
 
@@ -260,17 +255,19 @@ local function createWheels(y)
     local nbWheels = 6
     local ratio = width / nbWheels
     local tapis = display.newImage("assets/tapis.png")
+    level1Scene:insert(tapis)
     tapis.width = display.viewableContentWidth;
     tapis.height = 40
     tapis.y = y
     tapis.x = tapis.width / 2
+
     local offset = 5
     if (y < 100) then
        tapis.y = tapis.y - offset
     else
         tapis.y = tapis.y + offset
     end
-    for i = 1,6 do
+    for i = 1, 6 do
         local xPosition = (ratio * i) - (ratio / 2)
         local wheel = display.newImage("assets/roue.png")
         wheel.x = xPosition
@@ -280,7 +277,9 @@ local function createWheels(y)
         wheel.rotation = math.random(0, 180)
         wheel.y = y
         table.insert(wheels, wheel)
+        level1Scene:insert(wheel)
     end
+    return tapis
 end
 
 local function onEnterFrameWheels()
@@ -298,7 +297,7 @@ local function onEnterFrame(event)
     playerB:draw(event)
 end
 
-updateLastTime = system.getTimer()
+local updateLastTime
 local function mainUpdate()
     if gameIsOver then
         return
@@ -315,7 +314,6 @@ local function mainUpdate()
         storyboard.gotoScene("gameover", "fade", 500)
         gameIsOver = true
     end
-
 end
 
 function someoneLost()
@@ -329,33 +327,61 @@ function someoneLost()
 end
 
 function scene:enterScene(event)
-    ObstacleTimer = timer.performWithDelay(500, obstacleTimer)
+    ObstacleTimer = timer.performWithDelay(500, obstacleTimer, 0)
     Runtime:addEventListener( "enterFrame", onEnterFrameObstacles)
     MainUpdateTimer = timer.performWithDelay( MAIN_UPDATE_DELAY, mainUpdate, 0 )
 
-    -- top wheels
-    createWheels(0)
-    -- bottom wheels
-    createWheels(display.viewableContentHeight)
-
-    Runtime:addEventListener( "enterFrame", onEnterFrameWheels)
+Runtime:addEventListener( "enterFrame", onEnterFrameWheels)
     Runtime:addEventListener( "enterFrame", onEnterFrame)
 end
 
 -- Following methods are MANDATORY event if they are unused. Else it will not be recognized by the storyboard
-
 function scene:createScene( event )
+    updateLastTime = system.getTimer()
     gameIsOver = false
     level1Scene = self.view
+
+    local plainBG = display.newRect(level1Scene, 0, 0, display.viewableContentWidth * 3, display.viewableContentHeight * 2)
+    plainBG.x = 0
+    plainBG.y = 0
+    plainBG:setFillColor( 83, 71, 65)
+
+
     setBackgrounds(level1Scene)
     playerB = Player.new("player", "Player 1", playerSpawn, PLAYER_BOTTOM_SPAWNY, 1, pW, pH)
     playerT = Player.new("player", "Player 2", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
+    obstacles = {}
     bonusManager = BonusManager.new()
+
+    background:addEventListener("touch", swipe)
+
+    -- GROUNDS
+    -- top wheels
+    topTapis = createWheels(0)
+
+    topGround = Ground.new()
+    topGround = topGround:create(10, topTapis.contentWidth)
+    topGround.width = topTapis.contentWidth
+
+    -- bottom wheels
+    bottomTapis = createWheels(display.viewableContentHeight)
+    ground = Ground.new()
+    ground = ground:create(display.viewableContentHeight - 10, bottomTapis.contentWidth)
+    ground.width = bottomTapis.contentWidth
+
+    Runtime:addEventListener ( "collision", onCollision )
+
+    -- Only the background receives touches.
+    background:addEventListener( "touch", onTouch)
 end
 
 function scene:exitScene( event )
     timer.cancel(MainUpdateTimer)
     timer.cancel(ObstacleTimer)
+    background:removeEventListener("touch", swipe)
+    background:removeEventListener( "touch", onTouch)
+    Runtime:removeEventListener ( "collision", onCollision )
+    bonusManager:cancelTimersAndListeners()
 end
 
 function scene:destroyScene( event )

@@ -37,7 +37,7 @@ function Player.new(objectType, name, x, y, gravityScale, spriteWidth, spriteHei
     self.coronaObject = display.newSprite(imageSheet, PLAYER_SPRITE_SEQUENCE_DATA)
     self.coronaObject.x = x
     self.coronaObject.y = y
-    self.coronaObject:setFillColor(0, 255, 0)
+    --self.coronaObject:setFillColor(0, 255, 0)
     self.objectType = objectType
     self.coronaObject.objectType = objectType
     self.coronaObject.playerObject = self
@@ -57,10 +57,12 @@ function Player.new(objectType, name, x, y, gravityScale, spriteWidth, spriteHei
 end
 
 function Player:jump()
+    print("jump")
+    print (self.doubleJumpCount)
     if (self.doubleJumpCount > 1) then
         return
     end
-
+    print("jump!")
     local vx, vy = self.coronaObject:getLinearVelocity()
     -- If falling from surface where we landed previously, has the right to have a small jump, but not a full one
     if self.currentState ~= PLAYER_JUMP_STATE and signof(self.coronaObject.gravityScale) * vy > 0 then
@@ -82,6 +84,7 @@ end
 
 -- Did we just land on some sort of object?
 function Player:landedOn(collider)
+    print("landedOn")
     if collider.objectType == "obstacle" then
         self.coronaObject:setLinearVelocity(POSITIVE_X_VELOCITY_FRICTION_COUNTER_BALANCE, 0)
     else
@@ -138,7 +141,7 @@ function addBodyWithCutCornersRectangle(displayObject, percentageOfCut)
         -w/2, h/2 - h*percentageOfCut/100,
     }, filter=collisionFilter, friction = 0.0})
     displayObject.isFixedRotation = true
-end
+end
 function Player:assignBonus(bonus)
     self.currentBonus = bonus
     print ("my image is "..bonus.image)
@@ -156,7 +159,7 @@ function Player:assignBonus(bonus)
     	self.bonusImage.yScale = -1
     end
     	self.bonusImage.width = display.viewableContentHeight/7
-		self.bonusImage.height = self.bonusImage.width
+		self.bonusImage.height = self.bonusImage.width
     --level1Scene:insert(bonusImage)
 end
 
