@@ -38,13 +38,19 @@ function BonusManager:removeBonus(bonus)
     print("BonusManager.activateBonus")
     bonus:removeSelf()
 end
-function setBonusImages(object)	if (object.hiddenType == 1) then
+
+function setBonusImages(object)
+	if (object.hiddenType == 1) then
         object.image = "fall.png"   
     elseif (object.hiddenType == 2) then
-        object.image = "blind.png"        elseif (object.hiddenType == 3) then
+        object.image = "blind.png"   
+
+     elseif (object.hiddenType == 3) then
         object.image = "speedUp.png"   
-    endend
-local function generateBonus(y)
+    end
+end
+
+local function generateBonus(y)
     local BonusManagerHeight = 10
     local object = display.newImage("assets/surprise.png");
     object.width = 20;
@@ -55,14 +61,18 @@ end
     if (object.hiddenType == 1) then
         object:setFillColor ( 255, 0, 0)   
     elseif (object.hiddenType == 2) then
-        object:setFillColor ( 0, 0, 255 )    elseif  (object.hiddenType == 3) then    	object:setFillColor ( 0, 255, 0)
-    end    --define images to show per bonus    setBonusImages(object)
+        object:setFillColor ( 0, 0, 255 )
+    elseif  (object.hiddenType == 3) then
+    	object:setFillColor ( 0, 255, 0)
+    end
+    --define images to show per bonus
+    setBonusImages(object)
     --object:setFillColor ( 255, 0, 0 , 0 )
     object.objectType = "bonus"
     local collisionFilter = { categoryBits = 5, maskBits = 2 } -- collides with player only
     local body = { friction=0.5, bounce=0.2 , filter=collisionFilter }
     physics.addBody( object, "static", body )
-    table.insert(bonuses, object)
+    table.insert(bonuses, object)    level1Scene:insert(object)
     return object
 end
 
@@ -83,23 +93,20 @@ local function onEnterFrameBonusManager(event)
     -- new ones
     local random = math.random()
     local yPosition = 0
-    if (math.random() < 0.5) then
+    local top = math.random() < 0.5
+    if (top) then
         yPosition = display.viewableContentHeight / 4 + math.random(0, 10)
     else
         yPosition = display.viewableContentHeight / 4 * 3 - math.random(0, 10)
     end
     if random < BONUS_RANDOM then
-        generateBonus(yPosition)
+        local bonus = generateBonus(yPosition)
+        if (top) then
+            bonus.yScale = -1
             bonus.xScale = -1
+        end
     end
---    for i, bonus in ipairs(bonuses) do
---        if bonus ~= nil then
---            self:removeBonus(bonus)
---        end
---    end
-
-end
-
+endfunction BonusManager:cancelTimersAndListeners()	Runtime:removeEventListener ( "enterFrame", onEnterFrameBonusManager)end
 function BonusManager:initTimersAndListeners()
     Runtime:addEventListener( "enterFrame", onEnterFrameBonusManager)
 end

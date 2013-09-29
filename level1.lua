@@ -382,7 +382,7 @@ function scene:createScene( event )
     background:addEventListener( "touch", onTouch)
 end
 
-function scene:exitScene( event )
+function scene:exitScene( event )	middleGround:removeSelf()
     timer.cancel(MainUpdateTimer)
     timer.cancel(ObstacleTimer)
     background:removeEventListener("touch", swipe)
