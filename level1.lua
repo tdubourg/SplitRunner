@@ -204,15 +204,6 @@ function checkSwipeDirection(event)
     end
 end
 
-
-
-local middleGround = display.newRect(0 ,0, display.viewableContentWidth * 3, 2);
-middleGround.x = 0
-middleGround.y = display.viewableContentHeight / 2 + 7
-middleGround:setFillColor ( 0, 0, 0  )
-
-
-
 -- OBSTACLES
 -- random obstacles
 obstacles = nil
@@ -347,6 +338,13 @@ function scene:createScene( event )
     plainBG:setFillColor( 83, 71, 65)
 
 
+
+    middleGround = display.newRect(0 ,0, display.viewableContentWidth * 3, 2);
+    middleGround.x = 0
+    middleGround.y = display.viewableContentHeight / 2 + 7
+    middleGround:setFillColor ( 0, 0, 0  )
+
+
     setBackgrounds(level1Scene)
     playerB = Player.new("player", "Player 1", playerSpawn, PLAYER_BOTTOM_SPAWNY, 1, pW, pH)
     playerT = Player.new("player", "Player 2", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
@@ -376,6 +374,7 @@ function scene:createScene( event )
 end
 
 function scene:exitScene( event )
+    middleGround:removeSelf()
     timer.cancel(MainUpdateTimer)
     timer.cancel(ObstacleTimer)
     background:removeEventListener("touch", swipe)
