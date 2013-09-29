@@ -23,15 +23,8 @@ require("Effects")
 
 system.activate("multitouch")
 
+MAIN_UPDATE_DELAY = 1/30 -- 30 updates per seconds
 setBackgrounds()
-
-
-
-
-
-
-
-
 
 
 -- Set the background color to white  
@@ -53,8 +46,10 @@ local totalSwipeDistanceRight
 local totalSwipeDistanceUp
 local totalSwipeDistanceDown
 
-local player = Player.new("player", 50, 300, 1)
-local player2 = Player.new("player", 50, 50, -1)
+local pW, pH = display.contentWidth* PLAYER_WIDTH_IN_PERCENTAGE / 100, display.contentHeight * PLAYER_HEIGHT_IN_PERCENTAGE / 100
+local player = Player.new("player", 50, 300, 1, pW, pH)
+local player2 = Player.new("player", 50, 50, -1, pW, pH)
+
 
 
 -- BONUS 1
@@ -301,10 +296,26 @@ local function onEnterFrameWheels()
     end
 end
 
+local function onEnterFrame(event)
+    player:draw(event)
+    player2:draw(event)
+end
+
+updateLastTime = system.getTimer()
+local function mainUpdate()
+    local time = system.getTimer()
+    local seconds = time - updateLastTime
+    updateLastTime = time
+    player:update(seconds)
+    player2:update(seconds)
+end
+
+timer.performWithDelay( MAIN_UPDATE_DELAY, mainUpdate, 0 )
+
 -- top wheels
 createWheels(0)
 -- bottom wheels
 createWheels(display.viewableContentHeight)
 
 Runtime:addEventListener( "enterFrame", onEnterFrameWheels)
-
+Runtime:addEventListener( "enterFrame", onEnterFrame)
