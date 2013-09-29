@@ -2,6 +2,7 @@ local storyboard = require("storyboard")
 local scene = storyboard.newScene()
 
 local function onTouch(event)
+    storyboard.removeScene("level1")
     storyboard.gotoScene("menu", "fade", 500)
     return true
 end
@@ -30,6 +31,8 @@ function scene:enterScene(event)
     myText:setReferencePoint( display.TopLeftReferencePoint )
     myText.x = display.contentWidth*POS_X_WIDGET_BUTTON
     myText.y = display.contentHeight*POS_Y_WIDGET_BUTTON
+    WinnerPlayer.coronaObject:removeSelf()
+    WinnerPlayer = nil
     group:insert(background)
     group:insert(myText)
 end

@@ -10,6 +10,7 @@ BONUS_RANDOM = 0.01
 function BonusManager.new(args) -- constructor
     local self = {}
     setmetatable(self, BonusManager)
+    bonuses = {}
     return self
 end
 
@@ -89,7 +90,16 @@ local function onEnterFrameBonusManager(event)
     end
     if random < BONUS_RANDOM then
         generateBonus(yPosition)
+            bonus.xScale = -1
     end
+--    for i, bonus in ipairs(bonuses) do
+--        if bonus ~= nil then
+--            self:removeBonus(bonus)
+--        end
+--    end
+
 end
 
-Runtime:addEventListener( "enterFrame", onEnterFrameBonusManager)
+function BonusManager:initTimersAndListeners()
+    Runtime:addEventListener( "enterFrame", onEnterFrameBonusManager)
+end
