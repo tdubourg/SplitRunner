@@ -56,7 +56,7 @@ function Obstacle:create()
     obstacle.objectType = "obstacle"
     physics.addBody( obstacle, "dynamic", { friction=1, bounce=0 } )
     obstacle.gravityScale = gravityScale
-    level1Scene:insert(obstacle)
+    level1SceneBGLayer:insert(obstacle)
     print("Je suis la")
     return obstacle
 end

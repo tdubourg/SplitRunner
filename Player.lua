@@ -35,6 +35,7 @@ function Player.new(objectType, name, x, y, gravityScale, spriteWidth, spriteHei
         height = PLAYER_SPRITE_RAW_HEIGHT, numFrames = 12, sheetContentWidth=2400, sheetContentHeight=200})
 
     self.coronaObject = display.newSprite(imageSheet, PLAYER_SPRITE_SEQUENCE_DATA)
+    level1SceneBGLayer:insert(self.coronaObject)
     self.coronaObject.x = x
     self.coronaObject.y = y
     -- self.coronaObject:setFillColor(0, 255, 0)
@@ -159,7 +160,7 @@ function Player:assignBonus(bonus)
     	self.bonusImage.width = display.viewableContentHeight/7
 		self.bonusImage.height = self.bonusImage.width
 
-        level1Scene:insert(self.bonusImage)
+        level1SceneBGLayer:insert(self.bonusImage)
 end
 
 function Player:activateBonus(gravityScale)

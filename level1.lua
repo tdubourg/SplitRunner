@@ -42,6 +42,8 @@ local topGround
 local ground
 local middleGround
 level1Scene = nil
+level1SceneFrontLayer = nil
+level1SceneBGLayer = nil
 
 PLAYER_SPAWN_IN_PERCENTAGE_OF_WIDTH = 70
 PLAYER_TOP_SPAWNY = 50
@@ -246,7 +248,7 @@ local function createWheels(y)
     local nbWheels = 6
     local ratio = width / nbWheels
     local tapis = display.newImage("assets/tapis.png")
-    level1Scene:insert(tapis)
+    level1SceneBGLayer:insert(tapis)
     tapis.width = display.viewableContentWidth;
     tapis.height = 40
     tapis.y = y
@@ -268,7 +270,7 @@ local function createWheels(y)
         wheel.rotation = math.random(0, 180)
         wheel.y = y
         table.insert(wheels, wheel)
-        level1Scene:insert(wheel)
+        level1SceneBGLayer:insert(wheel)
     end
     return tapis
 end
@@ -337,6 +339,8 @@ function scene:createScene( event )
     print("createScene")
     gameIsOver = false
     level1Scene = self.view
+    level1SceneBGLayer = display.newGroup()
+    level1SceneFrontLayer = display.newGroup()
 
     local plainBG = display.newRect(level1Scene, 0, 0, display.viewableContentWidth * 3, display.viewableContentHeight * 2)
     plainBG.x = 0
@@ -378,6 +382,8 @@ function scene:createScene( event )
 
     -- Only the background receives touches.
     background:addEventListener( "touch", onTouch)
+    level1Scene:insert(level1SceneBGLayer)
+    level1Scene:insert(level1SceneFrontLayer)
 end
 
 function scene:exitScene( event )

@@ -17,6 +17,6 @@ function Ground:create(y, width)
     object:setFillColor ( 255, 0, 0 , 0 )
     object.objectType = "ground"
     physics.addBody( object, "static", { friction=0.5, bounce=0.2 } )
-    level1Scene:insert(object)
+    level1SceneBGLayer:insert(object)
     return object
 end

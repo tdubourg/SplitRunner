@@ -67,7 +67,7 @@ local function generateBonus(y)
     local body = { friction=0.5, bounce=0.2 , filter=collisionFilter }
     physics.addBody( object, "static", body )
     table.insert(bonuses, object)
-    level1Scene:insert(object)
+    level1SceneBGLayer:insert(object)
     return object
 end
 
