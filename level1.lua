@@ -245,6 +245,7 @@ local function createWheels(y)
     tapis.height = 40
     tapis.y = y
     tapis.x = tapis.width / 2
+
     local offset = 5
     if (y < 100) then
        tapis.y = tapis.y - offset
@@ -263,6 +264,7 @@ local function createWheels(y)
         table.insert(wheels, wheel)
         level1Scene:insert(wheel)
     end
+    return tapis
 end
 
 local function onEnterFrameWheels()
@@ -314,12 +316,7 @@ function scene:enterScene(event)
     Runtime:addEventListener( "enterFrame", onEnterFrameObstacles)
     MainUpdateTimer = timer.performWithDelay( MAIN_UPDATE_DELAY, mainUpdate, 0 )
 
-    -- top wheels
-    createWheels(0)
-    -- bottom wheels
-    createWheels(display.viewableContentHeight)
-
-    Runtime:addEventListener( "enterFrame", onEnterFrameWheels)
+Runtime:addEventListener( "enterFrame", onEnterFrameWheels)
     Runtime:addEventListener( "enterFrame", onEnterFrame)
 end
 
@@ -337,11 +334,18 @@ function scene:createScene( event )
     background:addEventListener("touch", swipe)
 
     -- GROUNDS
-    topGround = Ground.new()
-    topGround = topGround:create(10)
+    -- top wheels
+    topTapis = createWheels(0)
 
+    topGround = Ground.new()
+    topGround = topGround:create(10, topTapis.contentWidth)
+    topGround.width = topTapis.contentWidth
+
+    -- bottom wheels
+    bottomTapis = createWheels(display.viewableContentHeight)
     ground = Ground.new()
-    ground = ground:create(display.viewableContentHeight - 10)
+    ground = ground:create(display.viewableContentHeight - 10, bottomTapis.contentWidth)
+    ground.width = bottomTapis.contentWidth
 
     --[[
     local middleGround = Ground.new()
@@ -363,6 +367,7 @@ function scene:exitScene( event )
     background:removeEventListener("touch", swipe)
     background:removeEventListener( "touch", onTouch)
     Runtime:removeEventListener ( "collision", onCollision )
+    bonusManager:cancelTimersAndListeners()
 end
 
 function scene:destroyScene( event )

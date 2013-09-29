@@ -1,3 +1,5 @@
+local BonusManagerTimer
+
 BonusManager = {}
 
 BonusManager.__index = BonusManager
@@ -88,4 +90,9 @@ local function onEnterFrameBonusManager(event)
     end
 end
 
-Runtime:addEventListener( "enterFrame", onEnterFrameBonusManager)
+function BonusManager:cancelTimersAndListeners()
+    Runtime:removeEventListener("enterFrame", onEnterFrameBonusManager)
+end
+
+
+BonusManagerTimer = Runtime:addEventListener( "enterFrame", onEnterFrameBonusManager)
