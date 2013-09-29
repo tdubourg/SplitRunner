@@ -104,9 +104,6 @@ local function onCollision( event )
     physics.setReportCollisionsInContentCoordinates( true )
     local type1 = event.object1.objectType
     local type2 = event.object2.objectType
-    if type1 == "player" or type2 == "player" then
-        print("\n\n" .. event.phase .. " between object" .. type1 .. " and " .. type2 .. "\n\n")
-    end
     if (type1 == "obstacle" and type2 == "ground") or (type2 == "obstacle" and type1 == "ground") then
         -- objet auquel on va attacher la fumée
         local toAttach
@@ -131,8 +128,16 @@ local function onCollision( event )
             return
         end
         timer.performWithDelay(200, stopEffectClosure)
-    -- If this collision has just began
-    elseif true then
+    elseif (type1 == "player" and type2 == "bonus") or (type2 == "player" and type1 == "bonus") then
+        local bonus
+        local player
+        local coronaObject
+        if (type1 == "bonus") then bonus = event.object1 else bonus = event.object2 end
+        if (type1 == "player") then player = event.object1.playerObject else player = event.object2.playerObject end
+        if (type1 == "player") then coronaObject = event.object1 else coronaObject = event.object2 end
+        bonusManager:activateBonus(bonus, coronaObject.x, coronaObject.y)
+        player:assignBonus(bonus)
+    else
         player, collider = nil, nil
         -- Is one of the colliders a player and the other one either an obstacle or the ground?
         if (type1 == "player" and (type2 == "ground" or type2 == "obstacle")) then
@@ -145,31 +150,14 @@ local function onCollision( event )
 
         -- If we indeed had one of the 2 previous condition fulfilled:
         if player ~= nil and player.currentState == PLAYER_JUMP_STATE then
-            print(event.x)
-            print(event.y)
-            print(player.coronaObject.x)
-            print(player.coronaObject.y)
-            print((player.coronaObject.y + player.coronaObject.contentHeight/2))
             local vx, vy = player.coronaObject:getLinearVelocity()
             -- Then, is this collision a "landing" on the other collider?
-            if event.x >= player.coronaObject.x - player.coronaObject.width/2
-                    and event.x <= (player.coronaObject.x + player.coronaObject.contentWidth/2)
-                and (signof(player.coronaObject.gravityScale) * vy) > 0 then
-                print ("\n\n LANDED \n\n")
+            if (event.x >= player.coronaObject.x - player.coronaObject.width/2)
+                and (event.x <= (player.coronaObject.x + player.coronaObject.contentWidth/2))
+                    and ((signof(player.coronaObject.gravityScale) * vy) > 0) then
                 player:landedOn(collider)
-            else
-                print ("\n\n NOT LANDED \n\n")
             end
         end
-    elseif (type1 == "player" and type2 == "bonus") or (type2 == "player" and type1 == "bonus") then
-        local bonus
-        local player
-        local coronaObject
-        if (type1 == "bonus") then bonus = event.object1 else bonus = event.object2 end
-        if (type1 == "player") then player = event.object1.playerObject else player = event.object2.playerObject end
-        if (type1 == "player") then coronaObject = event.object1 else coronaObject = event.object2 end
-        bonusManager:activateBonus(bonus, coronaObject.x, coronaObject.y)
-        player:assignBonus(bonus)
     end
 end
 
