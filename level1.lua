@@ -54,26 +54,6 @@ local playerT = Player.new("player", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
 --playerB.coronaObject:setReferencePoint(display.TopLeftReferencePoint)
 --playerT.coronaObject:setReferencePoint(display.TopLeftReferencePoint)
 
--- BONUS 1
-local function activateBonus1(gravityScale)
-    for i, obstacle in ipairs(obstacles) do
-        obstacle.gravityScale = gravityScale * 8
-    end
-    local restoreObstacleGravityClosure = function()
-        for i, obstacle in ipairs(obstacles) do
-            obstacle.gravityScale = gravityScale
-        end
-        return
-    end
-    timer.performWithDelay(500, restoreObstacleGravityClosure)
-end
-
--- BONUS 2
-local function activateBonus2(gravityScale)
-    local effect = getSmokeWallEffect(gravityScale == -1)
-    effect:start("smoke")
-end
-
 
 local function onTouch( event )
     local o
@@ -176,18 +156,18 @@ function checkSwipeDirection()
                     totalSwipeDistanceLeft = beginX - endX
                 if totalSwipeDistanceLeft > minSwipeDistance then
                 if isPlayer1 == true then
-                    native.showAlert("test","Swiped Left Player1")
+                    --native.showAlert("test","Swiped Left Player1")
                 else
-                    native.showAlert("test","Swiped Left Player2")
+                    --native.showAlert("test","Swiped Left Player2")
                     end
                 end
             else
                 totalSwipeDistanceRight = endX - beginX
                 if totalSwipeDistanceRight > minSwipeDistance then
                     if isPlayer1 == true then
-                        native.showAlert("test","Swiped Right Player1")
+                        --native.showAlert("test","Swiped Right Player1")
                     else
-                        native.showAlert("test","Swiped Right Player2")
+                        --native.showAlert("test","Swiped Right Player2")
                     end
                 end
             end
