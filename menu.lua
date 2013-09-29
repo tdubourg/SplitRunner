@@ -12,7 +12,17 @@ local function onPlayBtnRelease()
 	
 	-- go to level1.lua scene
 	storyboard.gotoScene( "level1", "fade", 500 )
-	
+
+	return true	-- indicates successful touch
+end
+
+-- 'onRelease' event listener for playBtn
+local function onCreditsBtnRelease()
+
+	-- go to level1.lua scene
+	storyboard.gotoScene( "thecredits", "fade", 500 )
+--	storyboard.gotoScene( "credits", "fade", 500 )
+
 	return true	-- indicates successful touch
 end
 
@@ -45,6 +55,16 @@ function scene:createScene( event )
 	playBtn:setReferencePoint( display.TopLeftReferencePoint )
 	playBtn.x = display.contentWidth*POS_X_WIDGET_BUTTON
 	playBtn.y = display.contentHeight*POS_Y_WIDGET_BUTTON
+
+	creditsBtn = widget.newButton{
+		label="",
+		labelColor = { default={255}, over={128} },
+		width=0.078125*display.contentWidth, height=0.0462962962962963*display.contentHeight,
+		onRelease = onCreditsBtnRelease	-- event listener function
+	}
+	creditsBtn:setReferencePoint( display.TopLeftReferencePoint )
+	creditsBtn.x = 0.4661458333333333*display.contentWidth
+	creditsBtn.y = 0.9342592592592593*display.contentHeight
 	
 	-- all display objects must be inserted into group
 	group:insert( background )
@@ -68,6 +88,11 @@ function scene:destroyScene( event )
 	if playBtn then
 		playBtn:removeSelf()	-- widgets must be manually removed
 		playBtn = nil
+	end
+
+    if creditsBtn then
+        creditsBtn:removeSelf()	-- widgets must be manually removed
+        creditsBtn = nil
 	end
 end
 
