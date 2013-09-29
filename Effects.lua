@@ -73,10 +73,10 @@ function getSparkEffect(x, y)
     return effect
 end
 
-function getSmokeWallEffect(bottom)
+function getSmokeWallEffect(gravityScale)
     local yPosition = 0
     local angle = 265
-    if bottom == true then
+    if gravityScale == 1 then
         yPosition = display.viewableContentHeight - 50
         angle = 100
     end
@@ -109,7 +109,7 @@ function getSmokeWallEffect(bottom)
             physics={
                 autoAngle=false,
                 angles={angle},
-                velocity=3
+                velocity=5
             }
         }
     }

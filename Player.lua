@@ -106,6 +106,35 @@ function addBodyWithCutCornersRectangle(displayObject, percentageOfCut)
     displayObject.isFixedRotation = true
 end
 
-function Player.activateBonus(bonus)
-    print("TODO Player.activateBonus")
+function Player:assignBonus(bonus)
+    self.currentBonus = bonus
+end
+
+function Player:activateBonus(gravityScale)
+    local bonus = self.currentBonus
+    if (bonus == nil) then
+       return
+    end
+    if (bonus.hiddenType == 1) then
+        for i, obstacle in ipairs(obstacles) do
+            obstacle.gravityScale = gravityScale * 8
+        end
+        local restoreObstacleGravityClosure = function()
+            for i, obstacle in ipairs(obstacles) do
+                obstacle.gravityScale = gravityScale
+            end
+        end
+        timer.performWithDelay(500, restoreObstacleGravityClosure)
+    elseif (bonus.hiddenType == 2)then
+        local effect = getSmokeWallEffect(gravityScale)
+        effect:start("smoke")
+        local stopEffectClosure = function()
+            effect:stop("smoke")
+            effect:destroy()
+            effect=nil
+            return
+        end
+        timer.performWithDelay(5000, stopEffectClosure)
+    end
+    self.currentBonus = nil
 end

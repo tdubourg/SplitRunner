@@ -138,7 +138,7 @@ local function onCollision( event )
         if (type1 == "player") then player = event.object1.playerObject else player = event.object2.playerObject end
         if (type1 == "player") then coronaObject = event.object1 else coronaObject = event.object2 end
         bonusManager:activateBonus(bonus, coronaObject.x, coronaObject.y)
-        player:activateBonus(bonus)
+        player:assignBonus(bonus)
     end
 end
 
@@ -183,7 +183,7 @@ function checkSwipeDirection()
                 if totalSwipeDistanceUp > minSwipeDistance then
                     if isPlayer1 == true then
                         --native.showAlert("test","Player1 Attack")
-                        activateBonus1(-1)
+                        playerB:activateBonus(-1)
                     end
                 end
              else
@@ -191,7 +191,7 @@ function checkSwipeDirection()
                 if totalSwipeDistanceDown > minSwipeDistance then
                    if isPlayer2 == true then
                         --native.showAlert("test","Player2 Attack")
-                       activateBonus2(-1)
+                       playerT:activateBonus(1)
                    end
                 end
              end
