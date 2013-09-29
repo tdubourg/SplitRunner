@@ -16,18 +16,17 @@ require("background")
 require("Effects")
 
 require("BonusManager")
-bonusManager = BonusManager.new()
+bonusManager = nil
 
 system.activate("multitouch")
 
 MAIN_UPDATE_DELAY = 1/30 -- 30 updates per seconds
 
--- Set the background color to white  
+-- Set the background color to white
 local background = display.newRect( 0, 0, display.viewableContentWidth, display.viewableContentHeight)
 background:setFillColor( 255, 255, 255,0 )
 
- 
-local xDistance  
+local xDistance
 local yDistance
  
 local bDoingTouch
@@ -47,11 +46,8 @@ PLAYER_BOTTOM_SPAWNY = 300
 
 local pW, pH = display.contentWidth* PLAYER_WIDTH_IN_PERCENTAGE / 100, display.contentHeight * PLAYER_HEIGHT_IN_PERCENTAGE / 100
 local playerSpawn = PLAYER_SPAWN_IN_PERCENTAGE_OF_WIDTH * display.contentWidth / 100
-local playerB = Player.new("player", "Player 1", playerSpawn, PLAYER_BOTTOM_SPAWNY, 1, pW, pH)
-local playerT = Player.new("player", "Player 2", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
---playerB.coronaObject:setReferencePoint(display.TopLeftReferencePoint)
---playerT.coronaObject:setReferencePoint(display.TopLeftReferencePoint)
-
+local playerB
+local playerT
 
 local function onTouch( event )
     local o
@@ -352,7 +348,9 @@ function scene:createScene( event )
     gameIsOver = false
     level1Scene = self.view
     setBackgrounds(level1Scene)
-
+    playerB = Player.new("player", "Player 1", playerSpawn, PLAYER_BOTTOM_SPAWNY, 1, pW, pH)
+    playerT = Player.new("player", "Player 2", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
+    bonusManager = BonusManager.new()
 end
 
 function scene:exitScene( event )
