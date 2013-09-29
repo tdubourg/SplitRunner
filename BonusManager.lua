@@ -36,6 +36,15 @@ function BonusManager:removeBonus(bonus)
     bonus:removeSelf()
 end
 
+function setBonusImages(object)
+
+	if (object.hiddenType == 1) then
+        object.image = "fall.png"   
+    elseif (object.hiddenType == 2) then
+        object.image = "blind.png"   
+    end
+end
+
 local function generateBonus(y)
     local BonusManagerHeight = 10
     local object = display.newImage("assets/surprise.png");
@@ -45,10 +54,12 @@ local function generateBonus(y)
     object.x = display.viewableContentWidth + 20
     object.hiddenType = math.random(1,2)
     if (object.hiddenType == 1) then
-        object:setFillColor ( 255, 0, 0)
+        object:setFillColor ( 255, 0, 0)   
     elseif (object.hiddenType == 2) then
         object:setFillColor ( 0, 0, 255  )
     end
+    --define images to show per bonus
+    setBonusImages(object)
     --object:setFillColor ( 255, 0, 0 , 0 )
     object.objectType = "bonus"
     local collisionFilter = { categoryBits = 5, maskBits = 2 } -- collides with player only
