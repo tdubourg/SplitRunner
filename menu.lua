@@ -57,18 +57,20 @@ function scene:createScene( event )
 	playBtn.y = display.contentHeight*POS_Y_WIDGET_BUTTON
 
 	creditsBtn = widget.newButton{
-		label="",
-		labelColor = { default={255}, over={128} },
+		label="credits",
+		labelColor = { default={66, 33, 11}, over={128} },
+        textOnly = true,
 		width=0.078125*display.contentWidth, height=0.0462962962962963*display.contentHeight,
 		onRelease = onCreditsBtnRelease	-- event listener function
 	}
 	creditsBtn:setReferencePoint( display.TopLeftReferencePoint )
-	creditsBtn.x = 0.4661458333333333*display.contentWidth
-	creditsBtn.y = 0.9342592592592593*display.contentHeight
+	creditsBtn.x = 0.435*display.contentWidth
+	creditsBtn.y = 0.86*display.contentHeight
 	
 	-- all display objects must be inserted into group
 	group:insert( background )
 	group:insert( playBtn )
+	group:insert( creditsBtn )
 end
 
 -- Called immediately after scene has moved onscreen:
