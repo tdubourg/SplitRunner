@@ -44,34 +44,74 @@ function getSparkEffect(x, y)
             preset="sparks",
             title="explosion",
             build=function()
-                local shape=display.newImageRect("Textures/particle_with_trail.png", 5, 30)
+                local shape=display.newImageRect("Textures/generic_particle.png", 20, 30)
                 shape:setReferencePoint(display.CenterLeftReferencePoint)
                 return shape
             end,
             onCreation=function(particle)
-                particle:applyForce((math.random(-10, 10)/50), (math.random(-10, 10)/50))
+                particle:applyForce((math.random(-10, 10)/500), (math.random(-10, 10)/500))
             end,
             y=y,
             x=x,
             color={{255, 255, 0}},
             posRadius=3,
             positionType="inRadius",
-            perEmit=6,
+            perEmit=3,
             emitDelay=10,
-            lifeSpan=100,
+            lifeSpan=50,
             onDeath=function()end,
             rotateTowardVel=true,
             physics={
                 sizeY=-0.02,
-                velocity=2,
+                velocity=-8,
                 gravityY=0.05,
-                iterateAngle=true,
-                autoAngle=false,
-                angles={
-                    0, 60, 120, 180, 240, 300, 340
-                }
+                iterateAngle=false,
+                autoAngle=true,
             }
         },
+    }
+    return effect
+end
+
+function getSmokeWallEffect(bottom)
+    local yPosition = 0
+    local angle = 265
+    if bottom == true then
+        yPosition = display.viewableContentHeight - 50
+        angle = 100
+    end
+    local effect=CBE.VentGroup{
+        {
+            preset="burn", -- Not the smoke preset because it's just about the same as the burn effect, just with a few changes
+            title="smoke", -- The smoke vent
+            color={{255}},
+            build=function()
+                local size=math.random(120, 220)
+                return display.newImageRect("Textures/smoke.png", size, size)
+            end,
+            propertyTable={blendMode="screen"}, -- Lighten the comet slightly
+            onCreation=function()end,
+            perEmit=4,
+            positionType="inRect",
+            rectLeft=0,
+            rectTop=yPosition,
+            rectWidth=display.contentWidth,
+            rectHeight=100,
+            posRadius=3,
+            emitDelay=40,
+            fadeInTime=100,
+            lifeSpan=30,
+            lifeStart=50,
+            propertyTable={
+                rotation=0
+            },
+            endAlpha=0,
+            physics={
+                autoAngle=false,
+                angles={angle},
+                velocity=3
+            }
+        }
     }
     return effect
 end

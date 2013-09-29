@@ -69,12 +69,16 @@ local function activateBonus1(gravityScale)
     timer.performWithDelay(500, restoreObstacleGravityClosure)
 end
 
+-- BONUS 2
+local function activateBonus2(gravityScale)
+    local effect = getSmokeWallEffect(gravityScale == -1)
+    effect:start("smoke")
+end
 
 
 local function onTouch( event )
     local o
     local velocity
-    --activateBonus1(-1)
     local middleHeight = display.viewableContentHeight / 2
     if event.y > middleHeight then
         p = player
@@ -175,14 +179,16 @@ function checkSwipeDirection()
                 totalSwipeDistanceUp = beginY - endY
                 if totalSwipeDistanceUp > minSwipeDistance then
                     if isPlayer1 == true then
-                        native.showAlert("test","Player1 Attack")
+                        --native.showAlert("test","Player1 Attack")
+                        activateBonus1(-1)
                     end
                 end
              else
                 totalSwipeDistanceDown = endY - beginY
                 if totalSwipeDistanceDown > minSwipeDistance then
                    if isPlayer2 == true then
-                        native.showAlert("test","Player2 Attack")
+                        --native.showAlert("test","Player2 Attack")
+                       activateBonus2(-1)
                    end
                 end
              end
@@ -300,7 +306,11 @@ end
 
 local function onEnterFrameWheels()
     for i, wheel in ipairs(wheels) do
-        wheel.rotation = wheel.rotation - 4
+        local increment = -4
+        if wheel.y < 100 then
+            increment = 4
+        end
+        wheel.rotation = wheel.rotation + increment
     end
 end
 
