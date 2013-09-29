@@ -62,7 +62,6 @@ function Player:jump()
 end
 
 function Player:resetDoubleJumpCounter()
-    print ("reset")
     self.doubleJumpCount = 0
 end
 
@@ -79,6 +78,7 @@ end
 -- it will cut the corners at percentageOfCut percentage of the corner (percentageOfCut = 10 and displayObject has a
 --  widht of 200 would mean for instance that we will transform the 200 edge into a 200-2*200*10/100 edge (cutting
 --   corners on both sides at 10 percent...)
+-- with a density of 1 and a friction of 1
 function addBodyWithCutCornersRectangle(displayObject, percentageOfCut)
     -- If the user is stupid enough to give 0, avoid tue division by zero by falling back to a percentage of 10
     if percentageOfCut == 0 or percentageOfCut == nil then
@@ -104,4 +104,8 @@ function addBodyWithCutCornersRectangle(displayObject, percentageOfCut)
         -w/2, h/2 - h*percentageOfCut/100,
     }, filter=collisionFilter})
     displayObject.isFixedRotation = true
+end
+
+function Player.activateBonus(bonus)
+    print("TODO Player.activateBonus")
 end
