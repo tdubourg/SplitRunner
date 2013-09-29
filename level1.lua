@@ -294,35 +294,41 @@ local function mainUpdate()
     playerT:update(seconds)
     playerB:update(seconds)
 
-    WinnerPlayer = someoneLost()
+    WinnerPlayer, loserPlayer = someoneLost()
     if WinnerPlayer then
+        loserPlayer.coronaObject:removeSelf()
+        loserPlayer = nil
         storyboard.gotoScene("gameover", "fade", 500)
         gameIsOver = true
     end
 end
 
+-- Returns (Winner, Loser)
 function someoneLost()
     if playerT.coronaObject.y < topGround.y then
-        return playerB
+        return playerB, playerT
     elseif playerB.coronaObject.y > ground.y then
-        return playerT
+        return playerT, playerB
     end
     return nil
 
 end
 
 function scene:enterScene(event)
+
+
     ObstacleTimer = timer.performWithDelay(500, obstacleTimer, 0)
     Runtime:addEventListener( "enterFrame", onEnterFrameObstacles)
     MainUpdateTimer = timer.performWithDelay( MAIN_UPDATE_DELAY, mainUpdate, 0 )
 
-Runtime:addEventListener( "enterFrame", onEnterFrameWheels)
+    Runtime:addEventListener( "enterFrame", onEnterFrameWheels)
     Runtime:addEventListener( "enterFrame", onEnterFrame)
 end
 
 -- Following methods are MANDATORY event if they are unused. Else it will not be recognized by the storyboard
 function scene:createScene( event )
     updateLastTime = system.getTimer()
+    print("createScene")
     gameIsOver = false
     level1Scene = self.view
     setBackgrounds(level1Scene)
@@ -330,6 +336,7 @@ function scene:createScene( event )
     playerT = Player.new("player", "Player 2", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
     obstacles = {}
     bonusManager = BonusManager.new()
+    bonusManager:initTimersAndListeners()
 
     background:addEventListener("touch", swipe)
 
@@ -367,6 +374,12 @@ function scene:exitScene( event )
     background:removeEventListener("touch", swipe)
     background:removeEventListener( "touch", onTouch)
     Runtime:removeEventListener ( "collision", onCollision )
+    Runtime:removeEventListener( "enterFrame", onEnterFrameObstacles)
+    Runtime:removeEventListener ( "enterFrame", onEnterFrameBG )
+    Runtime:removeEventListener( "enterFrame", onEnterFrameWheels)
+
+
+    Runtime:removeEventListener( "enterFrame", onEnterFrameObstacles)
     bonusManager:cancelTimersAndListeners()
 end
 

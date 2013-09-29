@@ -6,22 +6,59 @@
 -- Managed with http://CoronaProjectManager.com
 --
 -- Copyright 2013 . All Rights Reserved.
--- 
+--
+
+local background, background2, midBackground, midBackground2, midBackground3
+
+local function updateBackgrounds()
+    --move backgrounds and reset positions when out of the screen
+    background.x = background.x - backgroundSpeed
+    if (background.x <= -background.width-backgroundSpeed) then
+        background.x = background.width-backgroundSpeed
+    end
+    background2.x = background2.x - backgroundSpeed
+    if (background2.x <= -background.width-backgroundSpeed) then
+        background2.x = background.width-backgroundSpeed
+    end
+    midBackground.x = midBackground.x - midBackgroundSpeed
+    if (midBackground.x <= -midBackground.width-midBackgroundSpeed) then
+        midBackground.x = (midBackground.width*2)-midBackgroundSpeed
+    end
+    midBackground2.x = midBackground2.x - midBackgroundSpeed
+    if (midBackground2.x <= -midBackground2.width-midBackgroundSpeed) then
+        midBackground2.x = (midBackground2.width*2)-midBackgroundSpeed
+    end
+
+    midBackground3.x = midBackground3.x - midBackgroundSpeed
+    if (midBackground3.x <= -midBackground3.width-midBackgroundSpeed) then
+        midBackground3.x = (midBackground3.width*2)-midBackgroundSpeed
+    end
+end
+
+local function update(event)
+    updateBackgrounds()
+end
+
+function onEnterFrameBG(e)
+    update()
+end
+
 function setBackgrounds(group)
 	--Globals
 	backgroundSpeed = (.25)
 	midBackgroundSpeed = (.5)
 		
 	--load BGs images and set their positions
-    local background = display.newImage("assets/splitrunner-02.jpg")
+    background = display.newImage("assets/splitrunner-02.jpg")
     background.width = display.viewableContentWidth;
     background.height = display.viewableContentHeight;
     background:setReferencePoint(display.TopLeftReferencePoint)
     background.x = 0
     background.y = 0
     group:insert(background)
+
 	-- adding same backgrounds for infinity effect
-	local background2 = display.newImage("assets/splitrunner-02.jpg")
+	background2 = display.newImage("assets/splitrunner-02.jpg")
     background2.width = display.viewableContentWidth;
     background2.height = display.viewableContentHeight;
     background2:setReferencePoint(display.TopLeftReferencePoint)
@@ -29,7 +66,7 @@ function setBackgrounds(group)
     background2.y = 0
     group:insert(background2)
 
-	local midBackground = display.newImage("images/etageres.png")
+	midBackground = display.newImage("images/etageres.png")
 	--3 backgrounds to be tablet compatible
     midBackground.alpha = 0.3
     midBackground.width = display.viewableContentWidth;
@@ -37,10 +74,10 @@ function setBackgrounds(group)
     midBackground:setReferencePoint(display.TopLeftReferencePoint)
     print (midBackground.height)
     midBackground.x = 0
-    midBackground.y =0
+    midBackground.y = 0
     group:insert(midBackground)
 
-	local midBackground2 = display.newImage("images/etageres.png")
+	midBackground2 = display.newImage("images/etageres.png")
     midBackground2.alpha = 0.3
     midBackground2.width = display.viewableContentWidth;
     midBackground2.height = display.viewableContentHeight;
@@ -49,47 +86,16 @@ function setBackgrounds(group)
     midBackground2.y = 0
     group:insert(midBackground2)
 
-	local midBackground3 = display.newImage("images/etageres.png")
+	midBackground3 = display.newImage("images/etageres.png")
     midBackground3.alpha = 0.3
     midBackground3.width = display.viewableContentWidth;
     midBackground3.height = display.viewableContentHeight;
     midBackground3:setReferencePoint(display.TopLeftReferencePoint)
-    midBackground3.x =  midBackground3.width*2
+    midBackground3.x = midBackground3.width*2
     midBackground3.y = 0
     group:insert(midBackground3)
 
-	local function updateBackgrounds()
-		--move backgrounds and reset positions when out of the screen
-		background.x = background.x - backgroundSpeed
-		if (background.x <= -background.width-backgroundSpeed) then
-			background.x = background.width-backgroundSpeed
-		end
-		background2.x = background2.x - backgroundSpeed
-		if (background2.x <= -background.width-backgroundSpeed) then
-			background2.x = background.width-backgroundSpeed
-		end
-		midBackground.x = midBackground.x - midBackgroundSpeed
-		if (midBackground.x <= -midBackground.width-midBackgroundSpeed) then
-			midBackground.x = (midBackground.width*2)-midBackgroundSpeed
-        end
-        midBackground2.x = midBackground2.x - midBackgroundSpeed
-        if (midBackground2.x <= -midBackground2.width-midBackgroundSpeed) then
-            midBackground2.x = (midBackground2.width*2)-midBackgroundSpeed
-        end
 
-        midBackground3.x = midBackground3.x - midBackgroundSpeed
-        if (midBackground3.x <= -midBackground3.width-midBackgroundSpeed) then
-            midBackground3.x = (midBackground3.width*2)-midBackgroundSpeed
-        end
-end
-
-local function update(event)
-    updateBackgrounds()
-end
-
-local function onEnterFrame(e)
-update()
-end
---update background positions on each frame
-Runtime:addEventListener ( "enterFrame", onEnterFrame )
+    --update background positions on each frame
+    Runtime:addEventListener ( "enterFrame", onEnterFrameBG )
 end
