@@ -6,7 +6,7 @@ Player = {}
 Player.__index = Player
 
 PLAYER_HORIZONTAL_VELOCITY = 0
-JUMP_VELOCITY = 150
+JUMP_VELOCITY = 200
 -- The following constants define the widht and height of the player in percentage of the screen so that the player
 -- takes the same amount of space on a small and on a big screen
 PLAYER_WIDTH_IN_PERCENTAGE = 10
@@ -17,6 +17,7 @@ PLAYER_SPRITE_RAW_HEIGHT = 200
 
 PLAYER_JUMP_STATE = 42
 PLAYER_RUN_STATE = 43
+POSITIVE_X_VELOCITY_FRICTION_COUNTER_BALANCE = 0.08
 
 local PLAYER_SPRITE_SEQUENCE_DATA = {
     { name="normalRun", start=1, count=8, time=400},
@@ -53,8 +54,21 @@ function Player:jump()
     if (self.doubleJumpCount > 1) then
         return
     end
+
+    local vx, vy = self.coronaObject:getLinearVelocity()
+    -- If falling from surface where we landed previously, has the right to have a small jump, but not a full one
+    if self.currentState ~= PLAYER_JUMP_STATE and signof(self.coronaObject.gravityScale) * vy > 0 then
+        reduction_coeff = 1/3
+    else
+        -- Full jump the first time, 2/3 of a full jump the second time
+        reduction_coeff = (3 - self.doubleJumpCount) / 3
+    end
+
     self.currentState = PLAYER_JUMP_STATE
-    self.coronaObject:setLinearVelocity(PLAYER_HORIZONTAL_VELOCITY, self.coronaObject.gravityScale * (-1) * JUMP_VELOCITY)
+    self.coronaObject:setLinearVelocity(
+        PLAYER_HORIZONTAL_VELOCITY,
+        self.coronaObject.gravityScale * (-1) * JUMP_VELOCITY * reduction_coeff
+    )
     self.coronaObject:setSequence("jump")
     self.coronaObject:play()
     self.doubleJumpCount = self.doubleJumpCount + 1
@@ -62,8 +76,15 @@ end
 
 -- Did we just land on some sort of object?
 function Player:landedOn(collider)
+    if collider.objectType == "obstacle" then
+        self.coronaObject:setLinearVelocity(POSITIVE_X_VELOCITY_FRICTION_COUNTER_BALANCE, 0)
+    else
+        self.coronaObject:setLinearVelocity(0, 0)
+    end
+
     self.currentState = PLAYER_RUN_STATE
     self.coronaObject:setSequence("normalRun")
+    self.coronaObject:setLinearVelocity(0, 0)
     self.coronaObject:play()
     self:resetDoubleJumpCounter()
 end
@@ -109,7 +130,7 @@ function addBodyWithCutCornersRectangle(displayObject, percentageOfCut)
         -- top left corner --
         -w/2 + w*percentageOfCut/100, h/2,
         -w/2, h/2 - h*percentageOfCut/100,
-    }, filter=collisionFilter})
+    }, filter=collisionFilter, friction = 0.0})
     displayObject.isFixedRotation = true
 end
 

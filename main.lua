@@ -150,7 +150,7 @@ local function onCollision( event )
         end
 
         -- If we indeed had one of the 2 previous condition fulfilled:
-        if player ~= nil and player.currentState == PLAYER_JUMP_STATE then
+        if player ~= nil then
             local vx, vy = player.coronaObject:getLinearVelocity()
             -- Then, is this collision a "landing" on the other collider?
             if (event.x >= player.coronaObject.x - player.coronaObject.width/2)
