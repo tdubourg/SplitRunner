@@ -97,6 +97,7 @@ local function onEnterFrameBonusManager(event)
         local bonus = generateBonus(yPosition)
         if (top) then
             bonus.yScale = -1
+            bonus.xScale = -1
         end
     end
 end
