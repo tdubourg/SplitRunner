@@ -36,7 +36,7 @@ function Player.new(objectType, x, y, gravityScale, spriteWidth, spriteHeight)
     self.coronaObject = display.newSprite(imageSheet, PLAYER_SPRITE_SEQUENCE_DATA)
     self.coronaObject.x = x
     self.coronaObject.y = y
-    self.coronaObject:setFillColor(0, 255, 0)
+    --self.coronaObject:setFillColor(0, 255, 0)
     self.objectType = objectType
     self.coronaObject.objectType = objectType
     self.coronaObject.playerObject = self

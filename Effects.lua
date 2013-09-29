@@ -44,7 +44,7 @@ function getSparkEffect(x, y)
             preset="sparks",
             title="explosion",
             build=function()
-                local shape=display.newImageRect("Textures/generic_particle.png", 20, 30)
+                local shape=display.newImageRect("Textures/generic_particle.png", 5, 10)
                 shape:setReferencePoint(display.CenterLeftReferencePoint)
                 return shape
             end,
@@ -56,14 +56,14 @@ function getSparkEffect(x, y)
             color={{255, 255, 0}},
             posRadius=3,
             positionType="inRadius",
-            perEmit=3,
+            perEmit=1,
             emitDelay=10,
             lifeSpan=50,
             onDeath=function()end,
             rotateTowardVel=true,
             physics={
-                sizeY=-0.02,
-                velocity=-8,
+                sizeY=-0.001,
+                velocity=2,
                 gravityY=0.05,
                 iterateAngle=false,
                 autoAngle=true,
@@ -91,7 +91,7 @@ function getSmokeWallEffect(gravityScale)
             end,
             propertyTable={blendMode="screen"}, -- Lighten the comet slightly
             onCreation=function()end,
-            perEmit=4,
+            perEmit=2,
             positionType="inRect",
             rectLeft=0,
             rectTop=yPosition,

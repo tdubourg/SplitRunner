@@ -21,10 +21,14 @@ bonusManager = BonusManager.new()
 system.activate("multitouch")
 
 MAIN_UPDATE_DELAY = 1/30 -- 30 updates per seconds
+local plainBG = display.newRect( 0, 0, display.viewableContentWidth * 3, display.viewableContentHeight * 2)
+plainBG.x = 0
+plainBG.y = 0
+plainBG:setFillColor( 83, 71, 65)
+
 setBackgrounds()
 
 
--- Set the background color to white  
 local background = display.newRect( 0, 0, display.viewableContentWidth, display.viewableContentHeight)
 background:setFillColor( 255, 255, 255,0 )
 
@@ -106,7 +110,7 @@ local function onCollision( event )
         if (type1 == "bonus") then bonus = event.object1 else bonus = event.object2 end
         if (type1 == "player") then player = event.object1.playerObject else player = event.object2.playerObject end
         if (type1 == "player") then coronaObject = event.object1 else coronaObject = event.object2 end
-        bonusManager:activateBonus(bonus, coronaObject.x, coronaObject.y)
+        bonusManager:activateBonus(bonus, bonus.x - 10, bonus.y)
         player:assignBonus(bonus)
     else
         player, collider = nil, nil
@@ -217,8 +221,9 @@ local middleGround = Ground.new()
 middleGround = middleGround:create(display.viewableContentHeight / 2)
 middleGround:setFillColor ( 0, 0, 0  )
 ]]
-local middleGround = display.newRect(0 ,0, display.viewableContentWidth, 5);
-middleGround.y = display.viewableContentHeight / 2
+local middleGround = display.newRect(0 ,0, display.viewableContentWidth * 3, 2);
+middleGround.x = 0
+middleGround.y = display.viewableContentHeight / 2 + 7
 middleGround:setFillColor ( 0, 0, 0  )
 Runtime:addEventListener ( "collision", onCollision )
 
@@ -249,7 +254,15 @@ end
 local function onEnterFrameObstacles(event)
     local velocity = 2
     for i, obstacle in ipairs(obstacles) do
-        obstacle.x = obstacle.x - velocity
+        if (obstacle.x == nil) then
+            --
+        else
+            if (obstacle.x < -80 or obstacle.y < 0) then
+                obstacle:removeSelf()
+                break
+            end
+            obstacle.x = obstacle.x - velocity
+        end
     end
 end
 

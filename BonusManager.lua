@@ -14,9 +14,6 @@ function BonusManager.new(args) -- constructor
 end
 
 function BonusManager:activateBonus(bonus, x, y)
---    print("BonusManager.activateBonus")
-    --bonus:removeSelf()
-
     if (bonus.effectDone == true) then
        return
     end
@@ -34,7 +31,6 @@ function BonusManager:activateBonus(bonus, x, y)
 end
 
 function BonusManager:removeBonus(bonus)
-    print("BonusManager.activateBonus")
     bonus:removeSelf()
 end
 
