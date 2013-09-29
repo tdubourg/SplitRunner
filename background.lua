@@ -50,7 +50,7 @@ function setBackgrounds(group)
 		
 	--load BGs images and set their positions
     local yOffset = 34
-    local background = display.newImage("assets/splitrunner-02.jpg")
+    background = display.newImage("assets/splitrunner-02.jpg")
     background.width = display.viewableContentWidth;
     background.height = display.viewableContentHeight * 0.8;
     background:setReferencePoint(display.TopLeftReferencePoint)

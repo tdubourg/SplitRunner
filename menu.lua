@@ -33,7 +33,7 @@ end
 POS_X_WIDGET_BUTTON = 0.2973958333333333
 POS_Y_WIDGET_BUTTON = 0.6407407407407407
 WIDTH_RATIO_WIDGET_BUTTON = 0.4182291666666667
-HEIGHT_RATIO_WIDGET_BUTTON = 0.1861111111111111
+HEIGHT_RATIO_WIDGET_BUTTON = 0.2
 
 function scene:createScene( event )
 	local group = self.view
@@ -49,11 +49,11 @@ function scene:createScene( event )
 		labelColor = { default={255}, over={128} },
 		defaultFile="images/play-button-startscreen.png",
 		overFile="images/play-button-startscreen-mouseover.png",
-		width=WIDTH_RATIO_WIDGET_BUTTON*display.contentWidth, height=HEIGHT_RATIO_WIDGET_BUTTON*display.contentHeight,
+		width=250, height=HEIGHT_RATIO_WIDGET_BUTTON*display.contentHeight,
 		onRelease = onPlayBtnRelease	-- event listener function
 	}
 	playBtn:setReferencePoint( display.TopLeftReferencePoint )
-	playBtn.x = display.contentWidth*POS_X_WIDGET_BUTTON
+	playBtn.x = display.contentWidth*POS_X_WIDGET_BUTTON - 30
 	playBtn.y = display.contentHeight*POS_Y_WIDGET_BUTTON
 
 	creditsBtn = widget.newButton{
