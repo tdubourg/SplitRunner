@@ -1,6 +1,6 @@
 local physics = require( "physics" )
 require("utils")
-physics.setDrawMode("hybrid") -- debug purpose only
+--physics.setDrawMode("hybrid") -- debug purpose only
 Player = {}
 
 Player.__index = Player
@@ -32,7 +32,7 @@ function Player.new(objectType, name, x, y, gravityScale, spriteWidth, spriteHei
     self.name = name
     self.coronaObject = nil
     local imageSheet = graphics.newImageSheet("images/player_spritesheet.png", {width = PLAYER_SPRITE_RAW_WIDTH,
-        height = PLAYER_SPRITE_RAW_HEIGHT, numFrames = 12})
+        height = PLAYER_SPRITE_RAW_HEIGHT, numFrames = 12, sheetContentWidth=2400, sheetContentHeight=200})
 
     self.coronaObject = display.newSprite(imageSheet, PLAYER_SPRITE_SEQUENCE_DATA)
     self.coronaObject.x = x

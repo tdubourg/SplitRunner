@@ -28,10 +28,6 @@ setBackgrounds()
 local background = display.newRect( 0, 0, display.viewableContentWidth, display.viewableContentHeight)
 background:setFillColor( 255, 255, 255,0 )
 
-local beginX 
-local beginY  
-local endX  
-local endY 
  
 local xDistance  
 local yDistance
@@ -56,26 +52,6 @@ local playerB = Player.new("player", "Player 1", playerSpawn, PLAYER_BOTTOM_SPAW
 local playerT = Player.new("player", "Player 2", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
 --playerB.coronaObject:setReferencePoint(display.TopLeftReferencePoint)
 --playerT.coronaObject:setReferencePoint(display.TopLeftReferencePoint)
-
--- BONUS 1
-local function activateBonus1(gravityScale)
-    for i, obstacle in ipairs(obstacles) do
-        obstacle.gravityScale = gravityScale * 8
-    end
-    local restoreObstacleGravityClosure = function()
-        for i, obstacle in ipairs(obstacles) do
-            obstacle.gravityScale = gravityScale
-        end
-        return
-    end
-    timer.performWithDelay(500, restoreObstacleGravityClosure)
-end
-
--- BONUS 2
-local function activateBonus2(gravityScale)
-    local effect = getSmokeWallEffect(gravityScale == -1)
-    effect:start("smoke")
-end
 
 
 local function onTouch( event )
@@ -159,44 +135,44 @@ local function onCollision( event )
     end
 end
 
-function checkSwipeDirection()
+function checkSwipeDirection(event)
     local isPlayer1 = false
     local isPlayer2 = false
     local middleHeight = display.viewableContentHeight / 2
-    if (beginY == nil) then
-        return
-    end
-    if beginY > middleHeight then
+   -- if (beginY == nil) then
+      --  return
+    --end
+    if event.yStart > middleHeight then
         isPlayer1 = true
     else
         isPlayer2 = true
     end
     if bDoingTouch == true then
-        xDistance =  math.abs(endX - beginX) -- math.abs will return the absolute, or non-negative value, of a given value.
-        yDistance =  math.abs(endY - beginY)
+        xDistance =  math.abs(event.x - event.xStart) -- math.abs will return the absolute, or non-negative value, of a given value.
+        yDistance =  math.abs(event.y - event.yStart)
         if xDistance > yDistance then
-                if beginX > endX then
-                    totalSwipeDistanceLeft = beginX - endX
+        	if event.xStart > event.x then
+                    totalSwipeDistanceLeft = event.xStart - event.x
                 if totalSwipeDistanceLeft > minSwipeDistance then
                 if isPlayer1 == true then
-                    native.showAlert("test","Swiped Left Player1")
+                    --native.showAlert("test","Swiped Left Player1")
                 else
-                    native.showAlert("test","Swiped Left Player2")
+                    --native.showAlert("test","Swiped Left Player2")
                     end
                 end
             else
-                totalSwipeDistanceRight = endX - beginX
+                totalSwipeDistanceRight = event.x - event.xStart
                 if totalSwipeDistanceRight > minSwipeDistance then
                     if isPlayer1 == true then
-                        native.showAlert("test","Swiped Right Player1")
+                        --native.showAlert("test","Swiped Right Player1")
                     else
-                        native.showAlert("test","Swiped Right Player2")
+                        --native.showAlert("test","Swiped Right Player2")
                     end
                 end
             end
         else
-         if beginY > endY then
-                totalSwipeDistanceUp = beginY - endY
+         if event.yStart > event.y then
+                totalSwipeDistanceUp = event.yStart - event.y
                 if totalSwipeDistanceUp > minSwipeDistance then
                     if isPlayer1 == true then
                         --native.showAlert("test","Player1 Attack")
@@ -204,7 +180,7 @@ function checkSwipeDirection()
                     end
                 end
              else
-                totalSwipeDistanceDown = endY - beginY
+                totalSwipeDistanceDown = event.y - event.yStart
                 if totalSwipeDistanceDown > minSwipeDistance then
                    if isPlayer2 == true then
                         --native.showAlert("test","Player2 Attack")
@@ -219,13 +195,13 @@ function checkSwipeDirection()
  function swipe(event)
     if event.phase == "began" then
         bDoingTouch = true
-        beginX = event.x
-        beginY = event.y
-        end
+        --beginX = event.x
+        --beginY = event.y
+     end
     if event.phase == "ended"  then
-        endX = event.x
-        endY = event.y
-        checkSwipeDirection();
+        --endX = event.x
+        --endY = event.y
+        checkSwipeDirection(event);
         bDoingTouch = false
     end
 end

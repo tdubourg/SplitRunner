@@ -14,11 +14,10 @@ function BonusManager.new(args) -- constructor
 end
 
 function BonusManager:activateBonus(bonus, x, y)
-    print("BonusManager.activateBonus")
+--    print("BonusManager.activateBonus")
     --bonus:removeSelf()
 
     if (bonus.effectDone == true) then
-        print("return")
        return
     end
     bonus.effectDone = true
@@ -47,6 +46,11 @@ local function generateBonus(y)
     object.y = y
     object.x = display.viewableContentWidth + 20
     object.hiddenType = math.random(1,2)
+    if (object.hiddenType == 1) then
+        object:setFillColor ( 255, 0, 0)
+    elseif (object.hiddenType == 2) then
+        object:setFillColor ( 0, 0, 255  )
+    end
     --object:setFillColor ( 255, 0, 0 , 0 )
     object.objectType = "bonus"
     local collisionFilter = { categoryBits = 5, maskBits = 2 } -- collides with player only
