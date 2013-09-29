@@ -46,6 +46,7 @@ local function generateBonus(y)
     object.height = 20;
     object.y = y
     object.x = display.viewableContentWidth + 20
+    object.hiddenType = math.random(1,2)
     --object:setFillColor ( 255, 0, 0 , 0 )
     object.objectType = "bonus"
     local collisionFilter = { categoryBits = 5, maskBits = 2 } -- collides with player only
