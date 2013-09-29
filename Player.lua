@@ -45,8 +45,13 @@ function Player.new(objectType, name, x, y, gravityScale, spriteWidth, spriteHei
     self.coronaObject.xScale, self.coronaObject.yScale = spriteWidth / PLAYER_SPRITE_RAW_WIDTH,
     signof(gravityScale) * spriteHeight / PLAYER_SPRITE_RAW_HEIGHT
     addBodyWithCutCornersRectangle(self.coronaObject, 30)
+    self.bonusImage = nil
     self.coronaObject:play()
-
+	if (gravityScale == 1) then
+		self.isPlayer1 = true
+	else
+		self.isPlayer2 = true
+	end
     self.coronaObject.gravityScale = gravityScale
     return self
 end
@@ -133,10 +138,26 @@ function addBodyWithCutCornersRectangle(displayObject, percentageOfCut)
         -w/2, h/2 - h*percentageOfCut/100,
     }, filter=collisionFilter, friction = 0.0})
     displayObject.isFixedRotation = true
-end
-
+end
 function Player:assignBonus(bonus)
     self.currentBonus = bonus
+    print ("my image is "..bonus.image)
+    if (self.bonusImage ~= nil)then
+    	self.bonusImage:removeSelf()
+    end
+    self.bonusImage = display.newImage("images/"..bonus.image)
+    local variation = display.viewableContentHeight/7
+    if (self.isPlayer1) then
+		self.bonusImage.x = 45
+		self.bonusImage.y = display.viewableContentHeight/2 + variation
+    else
+    	self.bonusImage.x = display.viewableContentWidth - 45
+    	self.bonusImage.y = display.viewableContentHeight/2 - variation
+    	self.bonusImage.yScale = -1
+    end
+    	self.bonusImage.width = display.viewableContentHeight/7
+		self.bonusImage.height = self.bonusImage.width
+    --level1Scene:insert(bonusImage)
 end
 
 function Player:activateBonus(gravityScale)
@@ -144,6 +165,9 @@ function Player:activateBonus(gravityScale)
     if (bonus == nil) then
        return
     end
+    print("removeImage"..self.bonusImage.x)
+    self.bonusImage:removeSelf()
+    self.bonusImage = nil
     if (bonus.hiddenType == 1) then
         for i, obstacle in ipairs(obstacles) do
             obstacle.gravityScale = gravityScale * 8
