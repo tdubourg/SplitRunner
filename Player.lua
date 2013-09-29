@@ -1,4 +1,5 @@
 local physics = require( "physics" )
+require("utils")
 physics.setDrawMode("hybrid") -- debug purpose only
 Player = {}
 
@@ -14,23 +15,19 @@ PLAYER_HEIGHT_IN_PERCENTAGE = 10
 PLAYER_SPRITE_RAW_WIDTH = 200
 PLAYER_SPRITE_RAW_HEIGHT = 200
 
-local PLAYER_SPRITE_SEQUENCE_DATA = {
-    { name="normalRun", start=1, count=8, time=300},
-    { name="jump", start=9, count=4, time=100}
-}
+PLAYER_JUMP_STATE = 42
+PLAYER_RUN_STATE = 43
 
-function signof(i)
-    if i == math.abs(i) then
-        return 1
-    else
-        return -1
-    end
-end
+local PLAYER_SPRITE_SEQUENCE_DATA = {
+    { name="normalRun", start=1, count=8, time=400},
+    { name="jump", start=9, count=4, time=400}
+}
 
 function Player.new(objectType, x, y, gravityScale, spriteWidth, spriteHeight)
     local self = {}
-    self.doubleJumpCount = 0
     setmetatable(self, Player)
+    self.currentState = PLAYER_RUN_STATE
+    self.doubleJumpCount = 0
     self.coronaObject = nil
     local imageSheet = graphics.newImageSheet("images/player_spritesheet.png", {width = PLAYER_SPRITE_RAW_WIDTH,
         height = PLAYER_SPRITE_RAW_HEIGHT, numFrames = 12})
@@ -56,9 +53,19 @@ function Player:jump()
     if (self.doubleJumpCount > 1) then
         return
     end
+    self.currentState = PLAYER_JUMP_STATE
     self.coronaObject:setLinearVelocity(PLAYER_HORIZONTAL_VELOCITY, self.coronaObject.gravityScale * (-1) * JUMP_VELOCITY)
     self.coronaObject:setSequence("jump")
+    self.coronaObject:play()
     self.doubleJumpCount = self.doubleJumpCount + 1
+end
+
+-- Did we just land on some sort of object?
+function Player:landedOn(collider)
+    self.currentState = PLAYER_RUN_STATE
+    self.coronaObject:setSequence("normalRun")
+    self.coronaObject:play()
+    self:resetDoubleJumpCounter()
 end
 
 function Player:resetDoubleJumpCounter()
