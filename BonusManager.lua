@@ -14,11 +14,10 @@ function BonusManager.new(args) -- constructor
 end
 
 function BonusManager:activateBonus(bonus, x, y)
-    print("BonusManager.activateBonus")
+--    print("BonusManager.activateBonus")
     --bonus:removeSelf()
 
     if (bonus.effectDone == true) then
-        print("return")
        return
     end
     bonus.effectDone = true
