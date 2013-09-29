@@ -394,6 +394,8 @@ function scene:exitScene( event )	middleGround:removeSelf()
 
 
     Runtime:removeEventListener( "enterFrame", onEnterFrameObstacles)
+--    Runtime:removeEventListener("enterFrame", ParticleHelper._onEnterFrame)
+
     bonusManager:cancelTimersAndListeners()
 end
 
