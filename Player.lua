@@ -1,6 +1,6 @@
 local physics = require( "physics" )
 require("utils")
---physics.setDrawMode("hybrid") -- debug purpose only
+physics.setDrawMode("hybrid") -- debug purpose only
 Player = {}
 
 Player.__index = Player
@@ -24,11 +24,12 @@ local PLAYER_SPRITE_SEQUENCE_DATA = {
     { name="jump", start=9, count=4, time=400}
 }
 
-function Player.new(objectType, x, y, gravityScale, spriteWidth, spriteHeight)
+function Player.new(objectType, name, x, y, gravityScale, spriteWidth, spriteHeight)
     local self = {}
     setmetatable(self, Player)
     self.currentState = PLAYER_RUN_STATE
     self.doubleJumpCount = 0
+    self.name = name
     self.coronaObject = nil
     local imageSheet = graphics.newImageSheet("images/player_spritesheet.png", {width = PLAYER_SPRITE_RAW_WIDTH,
         height = PLAYER_SPRITE_RAW_HEIGHT, numFrames = 12, sheetContentWidth=2400, sheetContentHeight=200})

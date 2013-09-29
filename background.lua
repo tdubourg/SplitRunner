@@ -7,7 +7,7 @@
 --
 -- Copyright 2013 . All Rights Reserved.
 -- 
-function setBackgrounds()
+function setBackgrounds(group)
 	--Globals
 	backgroundSpeed = (.25)
 	midBackgroundSpeed = (.5)
@@ -20,6 +20,7 @@ function setBackgrounds()
     background:setReferencePoint(display.TopLeftReferencePoint)
     background.x = 0
     background.y = yOffset
+    group:insert(background)
 	-- adding same backgrounds for infinity effect
 	local background2 = display.newImage("assets/splitrunner-02.jpg")
     background2.width = display.viewableContentWidth;
@@ -27,6 +28,7 @@ function setBackgrounds()
     background2:setReferencePoint(display.TopLeftReferencePoint)
     background2.x = background.width
     background2.y = yOffset
+    group:insert(background2)
     local ratio = 2
 	local midBackground = display.newImage("images/etageres.png")
 	--3 backgrounds to be tablet compatible
@@ -36,6 +38,8 @@ function setBackgrounds()
     midBackground:setReferencePoint(display.TopLeftReferencePoint)
     midBackground.x = 0
     midBackground.y =0
+    group:insert(midBackground)
+
 	local midBackground2 = display.newImage("images/etageres.png")
     midBackground2.alpha = 0.3
     midBackground2.width = display.viewableContentWidth * ratio;
@@ -43,6 +47,7 @@ function setBackgrounds()
     midBackground2:setReferencePoint(display.TopLeftReferencePoint)
     midBackground2.x =  midBackground2.width
     midBackground2.y = 0
+    group:insert(midBackground2)
 
 	local midBackground3 = display.newImage("images/etageres.png")
     midBackground3.alpha = 0.3
@@ -51,6 +56,8 @@ function setBackgrounds()
     midBackground3:setReferencePoint(display.TopLeftReferencePoint)
     midBackground3.x =  midBackground3.width*2
     midBackground3.y = 0
+    group:insert(midBackground3)
+
 	local function updateBackgrounds()
 		--move backgrounds and reset positions when out of the screen
 		background.x = background.x - backgroundSpeed

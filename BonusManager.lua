@@ -1,3 +1,5 @@
+local BonusManagerTimer
+
 BonusManager = {}
 
 BonusManager.__index = BonusManager
@@ -53,6 +55,7 @@ local function generateBonus(y)
     local body = { friction=0.5, bounce=0.2 , filter=collisionFilter }
     physics.addBody( object, "static", body )
     table.insert(bonuses, object)
+    level1Scene:insert(object)
     return object
 end
 
@@ -83,4 +86,9 @@ local function onEnterFrameBonusManager(event)
     end
 end
 
-Runtime:addEventListener( "enterFrame", onEnterFrameBonusManager)
+function BonusManager:cancelTimersAndListeners()
+    Runtime:removeEventListener("enterFrame", onEnterFrameBonusManager)
+end
+
+
+BonusManagerTimer = Runtime:addEventListener( "enterFrame", onEnterFrameBonusManager)

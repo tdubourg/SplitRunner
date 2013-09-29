@@ -6,6 +6,7 @@ function getSmokeEffect(x, y)
             preset="burn", -- Not the smoke preset because it's just about the same as the burn effect, just with a few changes
             title="smoke", -- The smoke vent
             color={{100}},
+            parentGroup = level1Scene,
             build=function()
                 local size=math.random(20, 20)
                 return display.newImageRect("Textures/arrow_over.png", size, size)
@@ -43,6 +44,7 @@ function getSparkEffect(x, y)
         {
             preset="sparks",
             title="explosion",
+            parentGroup = level1Scene,
             build=function()
                 local shape=display.newImageRect("Textures/generic_particle.png", 5, 10)
                 shape:setReferencePoint(display.CenterLeftReferencePoint)
@@ -85,6 +87,7 @@ function getSmokeWallEffect(gravityScale)
             preset="burn", -- Not the smoke preset because it's just about the same as the burn effect, just with a few changes
             title="smoke", -- The smoke vent
             color={{255}},
+            parentGroup = level1Scene,
             build=function()
                 local size=math.random(120, 220)
                 return display.newImageRect("Textures/smoke.png", size, size)
