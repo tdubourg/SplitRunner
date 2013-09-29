@@ -21,15 +21,8 @@ bonusManager = nil
 system.activate("multitouch")
 
 MAIN_UPDATE_DELAY = 1/30 -- 30 updates per seconds
-local plainBG = display.newRect( 0, 0, display.viewableContentWidth * 3, display.viewableContentHeight * 2)
-plainBG.x = 0
-plainBG.y = 0
-plainBG:setFillColor( 83, 71, 65)
 
-setBackgrounds()
-
-
--- Set the background color to white  
+-- Set the background color to white
 local background = display.newRect( 0, 0, display.viewableContentWidth, display.viewableContentHeight)
 background:setFillColor( 255, 255, 255,0 )
 
@@ -356,6 +349,13 @@ function scene:createScene( event )
     updateLastTime = system.getTimer()
     gameIsOver = false
     level1Scene = self.view
+
+    local plainBG = display.newRect(level1Scene, 0, 0, display.viewableContentWidth * 3, display.viewableContentHeight * 2)
+    plainBG.x = 0
+    plainBG.y = 0
+    plainBG:setFillColor( 83, 71, 65)
+
+
     setBackgrounds(level1Scene)
     playerB = Player.new("player", "Player 1", playerSpawn, PLAYER_BOTTOM_SPAWNY, 1, pW, pH)
     playerT = Player.new("player", "Player 2", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
@@ -378,14 +378,6 @@ function scene:createScene( event )
     ground = ground:create(display.viewableContentHeight - 10, bottomTapis.contentWidth)
     ground.width = bottomTapis.contentWidth
 
-    --[[
-    local middleGround = Ground.new()
-    middleGround = middleGround:create(display.viewableContentHeight / 2)
-    middleGround:setFillColor ( 0, 0, 0  )
-    ]]
-    middleGround = display.newRect(0 ,0, display.viewableContentWidth, 5);
-    middleGround.y = display.viewableContentHeight / 2
-    middleGround:setFillColor ( 0, 0, 0  )
     Runtime:addEventListener ( "collision", onCollision )
 
     -- Only the background receives touches.

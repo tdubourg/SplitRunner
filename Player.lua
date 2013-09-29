@@ -1,6 +1,6 @@
 local physics = require( "physics" )
 require("utils")
-physics.setDrawMode("hybrid") -- debug purpose only
+--physics.setDrawMode("hybrid") -- debug purpose only
 Player = {}
 
 Player.__index = Player
