@@ -21,8 +21,6 @@ bonusManager = BonusManager.new()
 system.activate("multitouch")
 
 MAIN_UPDATE_DELAY = 1/30 -- 30 updates per seconds
-setBackgrounds()
-
 
 -- Set the background color to white  
 local background = display.newRect( 0, 0, display.viewableContentWidth, display.viewableContentHeight)
@@ -41,6 +39,7 @@ local totalSwipeDistanceDown
 local gameIsOver = false
 local MainUpdateTimer
 local ObstacleTimer
+local level1Scene
 
 PLAYER_SPAWN_IN_PERCENTAGE_OF_WIDTH = 70
 PLAYER_TOP_SPAWNY = 50
@@ -351,6 +350,9 @@ end
 
 function scene:createScene( event )
     gameIsOver = false
+    level1Scene = self.view
+    setBackgrounds(level1Scene)
+
 end
 
 function scene:exitScene( event )
