@@ -6,8 +6,7 @@
 --
 -- Copyright 2013 . All Rights Reserved.
 ---- cpmgen main.lua
-
-
+
 local sprite = require("sprite")
 
 local physics = require("physics")
@@ -22,16 +21,46 @@ require("background")
 require("Effects")
 
 system.activate("multitouch")
+<<<<<<< HEAD
+=======
 
-MAIN_UPDATE_DELAY = 1/30 -- 30 updates per seconds
+
+--load BGs images and set their positions
+local background = display.newImage("images/background.png")
+background.x = 240
+background.y = 160
+local midBackground = display.newImage("images/bgfar1.png")
+midBackground.x = 480
+midBackground.y = 160
+
+local function updateBackgrounds()
+	--move backgrounds
+	background.x = background.x - (.25)
+	midBackground.x = midBackground.x - 3
+end
+
+local function update(event)
+	--updateBackgrounds()
+end
+
+-- call Update every 1 ms for an unlimited amount of time thanks to -1
+timer.performWithDelay(1, update, -1)
+
+
+
+
+
+
+
+
+>>>>>>> baf5aaa3129bbe90f3ba1eca7d6a132d58ae56b7
+
 setBackgrounds()
-
 
 -- Set the background color to white  
 local background = display.newRect( 0, 0, display.viewableContentWidth, display.viewableContentHeight)
-background:setFillColor( 255, 255, 255,0 )
-
-local beginX 
+<<<<<<< HEAD
+background:setFillColor( 255, 255, 255,0 )  local beginX 
 local beginY  
 local endX  
 local endY 
@@ -44,29 +73,13 @@ local minSwipeDistance = 80
 local totalSwipeDistanceLeft
 local totalSwipeDistanceRight
 local totalSwipeDistanceUp
-local totalSwipeDistanceDown
+local totalSwipeDistanceDown
+=======
+background:setFillColor( 255, 255, 255, 0 )
+>>>>>>> baf5aaa3129bbe90f3ba1eca7d6a132d58ae56b7
 
-local pW, pH = display.contentWidth* PLAYER_WIDTH_IN_PERCENTAGE / 100, display.contentHeight * PLAYER_HEIGHT_IN_PERCENTAGE / 100
-local player = Player.new("player", 50, 300, 1, pW, pH)
-local player2 = Player.new("player2", 50, 50, -1, pW, pH)
-
-
-
--- BONUS 1
-local function activateBonus1(gravityScale)
-    for i, obstacle in ipairs(obstacles) do
-        obstacle.gravityScale = gravityScale * 8
-    end
-    local restoreObstacleGravityClosure = function()
-        for i, obstacle in ipairs(obstacles) do
-            obstacle.gravityScale = gravityScale
-        end
-        return
-    end
-    timer.performWithDelay(500, restoreObstacleGravityClosure)
-end
-
-
+local player = Player.new("player", 50, 300, 1)
+local player2 = Player.new("player2", 50, 50, -1)
 
 local function onTouch( event )
     local o
@@ -87,12 +100,22 @@ local function onTouch( event )
     return true
 end
 
+local function stopSmokeEffect(effect)
+    --effect:stop("smoke")
+    effect:destroy()
+    effect=nil
+end
+
 local function onCollision( event )
     local type1 = event.object1.objectType
     local type2 = event.object2.objectType
+<<<<<<< HEAD
+    --print("collision between " .. type1 .. " and " .. type2)
+=======
     --print("collision between " .. type1 .. " and " .. type2)
     if (type1 == "obstacle" and type2 == "ground") or (type2 == "obstacle" and type1 == "ground") then
         -- objet auquel on va attacher la fumée
+        print(event.force)
         local toAttach
         if (type1 == "obstacle") then
             toAttach = event.object1
@@ -109,83 +132,59 @@ local function onCollision( event )
         local smokeEffect = getSmokeEffect(smokeXPosition, smokeYPosition)
         smokeEffect:start("smoke")
         local stopEffectClosure = function()
-            smokeEffect:stop("smoke")
-            smokeEffect:destroy()
-            smokeEffect=nil
-            return
+            return smokeEffect:stop("smoke")
         end
         timer.performWithDelay(200, stopEffectClosure)
     else
     end
+>>>>>>> baf5aaa3129bbe90f3ba1eca7d6a132d58ae56b7
 end
-
-function checkSwipeDirection()
-    local isPlayer1 = false
-    local isPlayer2 = false
-    local middleHeight = display.viewableContentHeight / 2
-    if (beginY == nil) then
-        return
-    end
-    if beginY > middleHeight then
-        isPlayer1 = true
-    else
-        isPlayer2 = true
-    end
-    if bDoingTouch == true then
-        xDistance =  math.abs(endX - beginX) -- math.abs will return the absolute, or non-negative value, of a given value.
-        yDistance =  math.abs(endY - beginY)
-        if xDistance > yDistance then
-                if beginX > endX then
-                    totalSwipeDistanceLeft = beginX - endX
-                if totalSwipeDistanceLeft > minSwipeDistance then
-                if isPlayer1 == true then
-                    native.showAlert("test","Swiped Left Player1")
-                else
-                    native.showAlert("test","Swiped Left Player2")
+local isPlayer1local isPlayer2function checkSwipeDirection()	            isPlayer1 = false				isPlayer2 = false				local middleHeight = display.viewableContentHeight / 2				if beginY > middleHeight then
+        			isPlayer1 = true
+			    else
+			        isPlayer2 = true
+			    end
+                if bDoingTouch == true then
+                xDistance =  math.abs(endX - beginX) -- math.abs will return the absolute, or non-negative value, of a given value. 
+                yDistance =  math.abs(endY - beginY)
+                if xDistance > yDistance then
+                        if beginX > endX then
+                        totalSwipeDistanceLeft = beginX - endX
+                        if totalSwipeDistanceLeft > minSwipeDistance then                        	if isPlayer1 == true then                        		native.showAlert("test","Swiped Left Player1")                        	else                        		native.showAlert("test","Swiped Left Player2")                        	end
+                        end
+                    else 
+                        totalSwipeDistanceRight = endX - beginX
+                        if totalSwipeDistanceRight > minSwipeDistance then
+                            if isPlayer1 == true then                        		native.showAlert("test","Swiped Right Player1")                        	else                        		native.showAlert("test","Swiped Right Player2")                        	end
+                        end
                     end
+                else 
+                 if beginY > endY then
+                        totalSwipeDistanceUp = beginY - endY                        print(totalSwipeDistanceUp)                        print(isPlayer1)
+                        if totalSwipeDistanceUp > minSwipeDistance then                        	if isPlayer1 == true then
+                                native.showAlert("test","Player1 Attack")                        	end
+                        end
+                     else 
+                        totalSwipeDistanceDown = endY - beginY                        print(totalSwipeDistanceDown)
+                        if totalSwipeDistanceDown > minSwipeDistance then
+                                if isPlayer2 == true then                                	native.showAlert("test","Player2 Attack")                                end
+                        end
+                     end
                 end
-            else
-                totalSwipeDistanceRight = endX - beginX
-                if totalSwipeDistanceRight > minSwipeDistance then
-                    if isPlayer1 == true then
-                        native.showAlert("test","Swiped Right Player1")
-                    else
-                        native.showAlert("test","Swiped Right Player2")
-                    end
-                end
-            end
-        else
-         if beginY > endY then
-                totalSwipeDistanceUp = beginY - endY
-                if totalSwipeDistanceUp > minSwipeDistance then
-                    if isPlayer1 == true then
-                        native.showAlert("test","Player1 Attack")
-                    end
-                end
-             else
-                totalSwipeDistanceDown = endY - beginY
-                if totalSwipeDistanceDown > minSwipeDistance then
-                   if isPlayer2 == true then
-                        native.showAlert("test","Player2 Attack")
-                   end
-                end
-             end
         end
-    end
  end
- 
  function swipe(event)
-    if event.phase == "began" then
-        bDoingTouch = true
-        beginX = event.x
-        beginY = event.y
+                if event.phase == "began" then
+            bDoingTouch = true
+                beginX = event.x
+            beginY = event.y
         end
-    if event.phase == "ended"  then
-        endX = event.x
-        endY = event.y
-        checkSwipeDirection();
-        bDoingTouch = false
-    end
+        if event.phase == "ended"  then
+            endX = event.x
+            endY = event.y
+            checkSwipeDirection();
+            bDoingTouch = false
+        end
 end
  
 background:addEventListener("touch", swipe)
@@ -238,11 +237,20 @@ local function onEnterFrameObstacles(event)
     for i, obstacle in ipairs(obstacles) do
         obstacle.x = obstacle.x - velocity
     end
-    player:draw(event)
-    player2:draw(event)
 end
 
+<<<<<<< HEAD
 Runtime:addEventListener( "enterFrame", onEnterFrameObstacles)
+=======
+Runtime:addEventListener( "enterFrame", onEnterFrameObstacles)
+
+
+
+
+
+
+
+
 
 -- TAPIS ROULANT
 
@@ -271,26 +279,14 @@ local function onEnterFrameWheels()
     end
 end
 
-local function onEnterFrame(event)
-    player:draw(event)
-    player2:draw(event)
-end
-
-updateLastTime = system.getTimer()
-local function mainUpdate()
-    local time = system.getTimer()
-    local seconds = time - updateLastTime
-    updateLastTime = time
-    player:update(seconds)
-    player2:update(seconds)
-end
-
-timer.performWithDelay( MAIN_UPDATE_DELAY, mainUpdate, 0 )
-
 -- top wheels
 createWheels(0)
 -- bottom wheels
 createWheels(display.viewableContentHeight)
 
 Runtime:addEventListener( "enterFrame", onEnterFrameWheels)
-Runtime:addEventListener( "enterFrame", onEnterFrame)
+
+
+
+
+>>>>>>> baf5aaa3129bbe90f3ba1eca7d6a132d58ae56b7

@@ -15,26 +15,36 @@ function setBackgrounds()
 	--load BGs images and set their positions
 		local background = display.newImage("images/background.png")
 	background:setReferencePoint(display.TopLeftReferencePoint)
-	background.x = 0
-	background.y = 0
+    background.width = display.viewableContentWidth;
+    background.height = display.viewableContentHeight;
+    background.x = 0
+    background.y = 0
 	-- adding same backgrounds for infinity effect
 	local background2 = display.newImage("images/background.png")
 	background2:setReferencePoint(display.TopLeftReferencePoint)
-	background2.x = background.width
-	background2.y = 0
-	local midBackground = display.newImage("images/bgfar1.png")
+    background2.width = display.viewableContentWidth;
+    background2.height = display.viewableContentHeight;
+    background2.x = background.width
+    background2.y = 0
+	local midBackground = display.newImage("assets/splitrunner-02.jpg")
 	--3 backgrounds to be tablet compatible
 	midBackground:setReferencePoint(display.TopLeftReferencePoint)
-	midBackground.x = 0
-	midBackground.y =0
-	local midBackground2 = display.newImage("images/bgfar1.png")
+    midBackground.width = display.viewableContentWidth;
+    midBackground.height = display.viewableContentHeight;
+    midBackground.x = 0
+    midBackground.y =0
+	local midBackground2 = display.newImage("assets/splitrunner-02.jpg")
 	midBackground2:setReferencePoint(display.TopLeftReferencePoint)
-	midBackground2.x =  midBackground2.width
-	midBackground2.y = 0
-	local midBackground3 = display.newImage("images/bgfar1.png")
+    midBackground2.width = display.viewableContentWidth;
+    midBackground2.height = display.viewableContentHeight;
+    midBackground2.x =  midBackground2.width
+    midBackground2.y = 0
+	local midBackground3 = display.newImage("assets/splitrunner-02.jpg")
 	midBackground3:setReferencePoint(display.TopLeftReferencePoint)
-	midBackground3.x =  midBackground3.width*2
-	midBackground3.y = 0
+    midBackground3.width = display.viewableContentWidth;
+    midBackground3.height = display.viewableContentHeight;
+    midBackground3.x =  midBackground3.width*2
+    midBackground3.y = 0
 
 	local function updateBackgrounds()
 		--move backgrounds and reset positions when out of the screen
