@@ -1,5 +1,5 @@
 local physics = require( "physics" )
-physics.setDrawMode("hybrid") -- debug purpose only
+--physics.setDrawMode("hybrid") -- debug purpose only
 require("anim")
 Player = {}
 
@@ -50,7 +50,6 @@ function Player:jump()
 end
 
 function Player:resetDoubleJumpCounter()
-    print ("reset")
     self.doubleJumpCount = 0
 
 end
@@ -96,4 +95,8 @@ function addBodyWithCutCornersRectangle(displayObject, percentageOfCut)
         -w/2, h/2 - h*percentageOfCut/100,
     }})
     displayObject.isFixedRotation = true
+end
+
+function Player.activateBonus(bonus)
+    print("TODO Player.activateBonus")
 end

@@ -21,6 +21,9 @@ require("background")
 
 require("Effects")
 
+require("BonusManager")
+bonusManager = BonusManager.new()
+
 system.activate("multitouch")
 
 MAIN_UPDATE_DELAY = 1/30 -- 30 updates per seconds
@@ -118,12 +121,17 @@ local function onCollision( event )
         timer.performWithDelay(200, stopEffectClosure)
     elseif (type1 == "player" and type2 == "ground") or (type2 == "player" and type1 == "ground") then
         local player
-        if (type1 == "player") then
-            player = event.object1.playerObject
-        else
-            player = event.object2.playerObject
-        end
+        if (type1 == "player") then player = event.object1.playerObject else player = event.object2.playerObject end
         player:resetDoubleJumpCounter()
+    elseif (type1 == "player" and type2 == "bonus") or (type2 == "player" and type1 == "bonus") then
+        local bonus
+        local player
+        local coronaObject
+        if (type1 == "bonus") then bonus = event.object1 else bonus = event.object2 end
+        if (type1 == "player") then player = event.object1.playerObject else player = event.object2.playerObject end
+        if (type1 == "player") then coronaObject = event.object1 else coronaObject = event.object2 end
+        bonusManager:activateBonus(bonus, coronaObject.x, coronaObject.y)
+        player:activateBonus(bonus)
     end
 end
 
@@ -319,3 +327,4 @@ createWheels(display.viewableContentHeight)
 
 Runtime:addEventListener( "enterFrame", onEnterFrameWheels)
 Runtime:addEventListener( "enterFrame", onEnterFrame)
+
