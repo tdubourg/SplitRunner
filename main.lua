@@ -132,6 +132,7 @@ local function onCollision( event )
         local bonus
         local player
         local coronaObject
+        event.contact.isEnabled = false
         if (type1 == "bonus") then bonus = event.object1 else bonus = event.object2 end
         if (type1 == "player") then player = event.object1.playerObject else player = event.object2.playerObject end
         if (type1 == "player") then coronaObject = event.object1 else coronaObject = event.object2 end
