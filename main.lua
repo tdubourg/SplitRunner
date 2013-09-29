@@ -46,11 +46,14 @@ local totalSwipeDistanceRight
 local totalSwipeDistanceUp
 local totalSwipeDistanceDown
 
+PLAYER_SPAWN_IN_PERCENTAGE_OF_WIDTH = 70
+PLAYER_TOP_SPAWNY = 50
+PLAYER_BOTTOM_SPAWNY = 300
+
 local pW, pH = display.contentWidth* PLAYER_WIDTH_IN_PERCENTAGE / 100, display.contentHeight * PLAYER_HEIGHT_IN_PERCENTAGE / 100
-local player = Player.new("player", 50, 300, 1, pW, pH)
-local player2 = Player.new("player", 50, 50, -1, pW, pH)
-
-
+local playerSpawn = PLAYER_SPAWN_IN_PERCENTAGE_OF_WIDTH * display.contentWidth / 100
+local playerB = Player.new("player", playerSpawn, PLAYER_BOTTOM_SPAWNY, 1, pW, pH)
+local playerT = Player.new("player", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
 
 -- BONUS 1
 local function activateBonus1(gravityScale)
@@ -74,9 +77,9 @@ local function onTouch( event )
     --activateBonus1(-1)
     local middleHeight = display.viewableContentHeight / 2
     if event.y > middleHeight then
-        p = player
+        p = playerB
     else
-        p = player2
+        p = playerT
     end
 
     -- condition equivalent to a check of "onKeyDown", in order not to repeat the action when the touch event lasts
@@ -297,8 +300,8 @@ local function onEnterFrameWheels()
 end
 
 local function onEnterFrame(event)
-    player:draw(event)
-    player2:draw(event)
+    playerT:draw(event)
+    playerB:draw(event)
 end
 
 updateLastTime = system.getTimer()
@@ -306,8 +309,8 @@ local function mainUpdate()
     local time = system.getTimer()
     local seconds = time - updateLastTime
     updateLastTime = time
-    player:update(seconds)
-    player2:update(seconds)
+    playerT:update(seconds)
+    playerB:update(seconds)
 end
 
 timer.performWithDelay( MAIN_UPDATE_DELAY, mainUpdate, 0 )
