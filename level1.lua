@@ -42,6 +42,9 @@ local totalSwipeDistanceLeft
 local totalSwipeDistanceRight
 local totalSwipeDistanceUp
 local totalSwipeDistanceDown
+local gameIsOver = false
+local MainUpdateTimer
+local ObstacleTimer
 
 PLAYER_SPAWN_IN_PERCENTAGE_OF_WIDTH = 70
 PLAYER_TOP_SPAWNY = 50
@@ -49,8 +52,8 @@ PLAYER_BOTTOM_SPAWNY = 300
 
 local pW, pH = display.contentWidth* PLAYER_WIDTH_IN_PERCENTAGE / 100, display.contentHeight * PLAYER_HEIGHT_IN_PERCENTAGE / 100
 local playerSpawn = PLAYER_SPAWN_IN_PERCENTAGE_OF_WIDTH * display.contentWidth / 100
-local playerB = Player.new("player", playerSpawn, PLAYER_BOTTOM_SPAWNY, 1, pW, pH)
-local playerT = Player.new("player", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
+local playerB = Player.new("player", "Player 1", playerSpawn, PLAYER_BOTTOM_SPAWNY, 1, pW, pH)
+local playerT = Player.new("player", "Player 2", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
 --playerB.coronaObject:setReferencePoint(display.TopLeftReferencePoint)
 --playerT.coronaObject:setReferencePoint(display.TopLeftReferencePoint)
 
@@ -326,17 +329,38 @@ end
 
 updateLastTime = system.getTimer()
 local function mainUpdate()
+    if gameIsOver then
+        return
+    end
+    
     local time = system.getTimer()
     local seconds = time - updateLastTime
     updateLastTime = time
     playerT:update(seconds)
     playerB:update(seconds)
+
+    WinnerPlayer = someoneLost()
+    if WinnerPlayer then
+        storyboard.gotoScene("gameover", "fade", 500)
+        gameIsOver = true
+    end
+
+end
+
+function someoneLost()
+    if playerT.coronaObject.y < topGround.y then
+        return playerB
+    elseif playerB.coronaObject.y > ground.y then
+        return playerT
+    end
+    return nil
+
 end
 
 function scene:enterScene(event)
-    timer.performWithDelay(500, obstacleTimer)
+    ObstacleTimer = timer.performWithDelay(500, obstacleTimer)
     Runtime:addEventListener( "enterFrame", onEnterFrameObstacles)
-    timer.performWithDelay( MAIN_UPDATE_DELAY, mainUpdate, 0 )
+    MainUpdateTimer = timer.performWithDelay( MAIN_UPDATE_DELAY, mainUpdate, 0 )
 
     -- top wheels
     createWheels(0)
@@ -350,11 +374,12 @@ end
 -- Following methods are MANDATORY event if they are unused. Else it will not be recognized by the storyboard
 
 function scene:createScene( event )
-
+    gameIsOver = false
 end
 
 function scene:exitScene( event )
-
+    timer.cancel(MainUpdateTimer)
+    timer.cancel(ObstacleTimer)
 end
 
 function scene:destroyScene( event )

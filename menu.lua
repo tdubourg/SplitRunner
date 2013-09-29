@@ -86,6 +86,9 @@ end
 -- If scene's view is removed, scene:destroyScene() will be called just prior to:
 function scene:destroyScene( event )
 	local group = self.view
+
+    background:removeSelf()
+    background = nil
 	
 	if playBtn then
 		playBtn:removeSelf()	-- widgets must be manually removed
