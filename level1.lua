@@ -107,7 +107,7 @@ local function onCollision( event )
         if (type1 == "bonus") then bonus = event.object1 else bonus = event.object2 end
         if (type1 == "player") then player = event.object1.playerObject else player = event.object2.playerObject end
         if (type1 == "player") then coronaObject = event.object1 else coronaObject = event.object2 end
-        bonusManager:activateBonus(bonus, coronaObject.x, coronaObject.y)
+        bonusManager:activateBonus(bonus, bonus.x - 10, bonus.y)
         player:assignBonus(bonus)
     else
         player, collider = nil, nil
@@ -204,8 +204,6 @@ function checkSwipeDirection(event)
     end
 end
 
-
-
 -- OBSTACLES
 -- random obstacles
 obstacles = nil
@@ -227,7 +225,15 @@ end
 local function onEnterFrameObstacles(event)
     local velocity = 2
     for i, obstacle in ipairs(obstacles) do
-        obstacle.x = obstacle.x - velocity
+        if (obstacle.x == nil) then
+            --
+        else
+            if (obstacle.x < -80 or obstacle.y < 0) then
+                obstacle:removeSelf()
+                break
+            end
+            obstacle.x = obstacle.x - velocity
+        end
     end
 end
 
@@ -331,6 +337,20 @@ function scene:createScene( event )
     print("createScene")
     gameIsOver = false
     level1Scene = self.view
+
+    local plainBG = display.newRect(level1Scene, 0, 0, display.viewableContentWidth * 3, display.viewableContentHeight * 2)
+    plainBG.x = 0
+    plainBG.y = 0
+    plainBG:setFillColor( 83, 71, 65)
+
+
+
+    middleGround = display.newRect(0 ,0, display.viewableContentWidth * 3, 2);
+    middleGround.x = 0
+    middleGround.y = display.viewableContentHeight / 2 + 7
+    middleGround:setFillColor ( 0, 0, 0  )
+
+
     setBackgrounds(level1Scene)
     playerB = Player.new("player", "Player 1", playerSpawn, PLAYER_BOTTOM_SPAWNY, 1, pW, pH)
     playerT = Player.new("player", "Player 2", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
@@ -354,14 +374,6 @@ function scene:createScene( event )
     ground = ground:create(display.viewableContentHeight - 10, bottomTapis.contentWidth)
     ground.width = bottomTapis.contentWidth
 
-    --[[
-    local middleGround = Ground.new()
-    middleGround = middleGround:create(display.viewableContentHeight / 2)
-    middleGround:setFillColor ( 0, 0, 0  )
-    ]]
-    middleGround = display.newRect(0 ,0, display.viewableContentWidth, 5);
-    middleGround.y = display.viewableContentHeight / 2
-    middleGround:setFillColor ( 0, 0, 0  )
     Runtime:addEventListener ( "collision", onCollision )
 
     -- Only the background receives touches.
@@ -369,6 +381,7 @@ function scene:createScene( event )
 end
 
 function scene:exitScene( event )
+    middleGround:removeSelf()
     timer.cancel(MainUpdateTimer)
     timer.cancel(ObstacleTimer)
     background:removeEventListener("touch", swipe)

@@ -7,6 +7,8 @@ Obstacle.__index = Obstacle
 function Obstacle.new(args) -- constructor
     local self = {}
     setmetatable(self, Obstacle)
+    if (obstaclesT == nil)then obstaclesT = 0 end
+    if (obstaclesB == nil)then obstaclesB = 0 end
     return self
 end
 
@@ -14,12 +16,16 @@ function Obstacle:create()
     local gravityScale = 1
     local targetY = display.viewableContentHeight / 2
     local random = math.random()
-    if random > 0.5 then
+    local targetYOffset = 70
+    if obstaclesB > obstaclesT then
         gravityScale = -1
-        targetY = targetY - 40
+        obstaclesT = obstaclesT + 1
+        targetY = targetY - targetYOffset
     else
-        targetY = targetY + 40
+        obstaclesB = obstaclesB + 1
+        targetY = targetY + targetYOffset
     end
+    print (obstaclesB)
     random = math.random()
     local isLarge = false
     local imageUrl = "assets/crate-"
