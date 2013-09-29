@@ -19,6 +19,14 @@ local PLAYER_SPRITE_SEQUENCE_DATA = {
     { name="jump", start=9, count=4, time=100}
 }
 
+function signof(i)
+    if i == math.abs(i) then
+        return 1
+    else
+        return -1
+    end
+end
+
 function Player.new(objectType, x, y, gravityScale, spriteWidth, spriteHeight)
     local self = {}
     self.doubleJumpCount = 0
@@ -28,6 +36,7 @@ function Player.new(objectType, x, y, gravityScale, spriteWidth, spriteHeight)
         height = PLAYER_SPRITE_RAW_HEIGHT, numFrames = 12})
 
     self.coronaObject = display.newSprite(imageSheet, PLAYER_SPRITE_SEQUENCE_DATA)
+    self.coronaObject.x = x
     self.coronaObject.y = y
     self.coronaObject:setFillColor(0, 255, 0)
     self.objectType = objectType
@@ -35,7 +44,7 @@ function Player.new(objectType, x, y, gravityScale, spriteWidth, spriteHeight)
     self.coronaObject.playerObject = self
     self.coronaObject.width, self.coronaObject.height = spriteWidth, spriteHeight
     self.coronaObject.xScale, self.coronaObject.yScale = spriteWidth / PLAYER_SPRITE_RAW_WIDTH,
-    spriteHeight / PLAYER_SPRITE_RAW_HEIGHT
+    signof(gravityScale) * spriteHeight / PLAYER_SPRITE_RAW_HEIGHT
     addBodyWithCutCornersRectangle(self.coronaObject, 30)
     self.coronaObject:play()
 
