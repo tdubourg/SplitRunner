@@ -42,7 +42,7 @@ function scene:createScene( event )
 	local background = display.newImageRect( "images/startscreen.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
-	
+
 	-- create a widget button (which will loads level1.lua on release)
 	playBtn = widget.newButton{
 		label="",

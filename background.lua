@@ -95,7 +95,4 @@ function setBackgrounds(group)
     midBackground3.x = midBackground3.width*2
     midBackground3.y = 0
     group:insert(midBackground3)
-
-    --update background positions on each frame
-    Runtime:addEventListener ( "enterFrame", onEnterFrameBG )
 end
