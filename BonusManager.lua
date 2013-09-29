@@ -76,13 +76,17 @@ local function onEnterFrameBonusManager(event)
     -- new ones
     local random = math.random()
     local yPosition = 0
-    if (math.random() < 0.5) then
+    local top = math.random() < 0.5
+    if (top) then
         yPosition = display.viewableContentHeight / 4 + math.random(0, 10)
     else
         yPosition = display.viewableContentHeight / 4 * 3 - math.random(0, 10)
     end
     if random < BONUS_RANDOM then
-        generateBonus(yPosition)
+        local bonus = generateBonus(yPosition)
+        if (top) then
+            bonus.yScale = -1
+        end
     end
 end
 
