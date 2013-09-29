@@ -1,6 +1,5 @@
 local physics = require( "physics" )
---physics.setDrawMode("hybrid") -- debug purpose only
-require("anim")
+physics.setDrawMode("hybrid") -- debug purpose only
 Player = {}
 
 Player.__index = Player
@@ -12,9 +11,12 @@ JUMP_VELOCITY = 150
 PLAYER_WIDTH_IN_PERCENTAGE = 10
 PLAYER_HEIGHT_IN_PERCENTAGE = 10
 
-local spriteSequenceData = {
-    { name="normalRun", start=1, count=8, time=800 },
-    { name="fastRun", frames={ 1,2,4,5,6,7 }, time=250, loopCount=0 }
+PLAYER_SPRITE_RAW_WIDTH = 200
+PLAYER_SPRITE_RAW_HEIGHT = 200
+
+local PLAYER_SPRITE_SEQUENCE_DATA = {
+    { name="normalRun", start=1, count=8, time=300},
+    { name="jump", start=9, count=4, time=100}
 }
 
 function Player.new(objectType, x, y, gravityScale, spriteWidth, spriteHeight)
@@ -22,20 +24,20 @@ function Player.new(objectType, x, y, gravityScale, spriteWidth, spriteHeight)
     self.doubleJumpCount = 0
     setmetatable(self, Player)
     self.coronaObject = nil
-    local collisionFilter = { categoryBits = 2, maskBits = 5 } -- collides with player only
-    local body = { filter=collisionFilter }
-    self.coronaObject = display.newRect(  x, y, 20, 20)
-    self.coronaObject .y = y
-    self.coronaObject.playerObject = self
-    self.coronaObject :setFillColor(0, 255, 0)
-    self.coronaObject.objectType = objectType
-    self.objectType = objectType
-    physics.addBody ( self.coronaObject , "dynamic", body )
---    display.newSprite( mySheet, sequenceData )
-    self.anim = Anim.new('boy', spriteWidth, spriteHeight)
-    --self.coronaObject .isFixedRotation = true
+    local imageSheet = graphics.newImageSheet("images/player_spritesheet.png", {width = PLAYER_SPRITE_RAW_WIDTH,
+        height = PLAYER_SPRITE_RAW_HEIGHT, numFrames = 12})
 
-    --physics.addBody( rect, "dynamic" )
+    self.coronaObject = display.newSprite(imageSheet, PLAYER_SPRITE_SEQUENCE_DATA)
+    self.coronaObject.y = y
+    self.coronaObject:setFillColor(0, 255, 0)
+    self.objectType = objectType
+    self.coronaObject.objectType = objectType
+    self.coronaObject.playerObject = self
+    self.coronaObject.width, self.coronaObject.height = spriteWidth, spriteHeight
+    self.coronaObject.xScale, self.coronaObject.yScale = spriteWidth / PLAYER_SPRITE_RAW_WIDTH,
+    spriteHeight / PLAYER_SPRITE_RAW_HEIGHT
+    addBodyWithCutCornersRectangle(self.coronaObject, 30)
+    self.coronaObject:play()
 
     self.coronaObject.gravityScale = gravityScale
     return self
@@ -46,12 +48,12 @@ function Player:jump()
         return
     end
     self.coronaObject:setLinearVelocity(PLAYER_HORIZONTAL_VELOCITY, self.coronaObject.gravityScale * (-1) * JUMP_VELOCITY)
+    self.coronaObject:setSequence("jump")
     self.doubleJumpCount = self.doubleJumpCount + 1
 end
 
 function Player:resetDoubleJumpCounter()
     self.doubleJumpCount = 0
-
 end
 
 function Player:draw(event)
@@ -59,10 +61,6 @@ function Player:draw(event)
 end
 
 function Player:update(seconds)
-    self.anim:update(seconds)
-    self.anim.currentImg.x = self.coronaObject.x
-    self.anim.currentImg.y = self.coronaObject.y
-    self.anim.currentImg.isVisible = true
 end
 
 
@@ -79,7 +77,9 @@ function addBodyWithCutCornersRectangle(displayObject, percentageOfCut)
     end
     h, w = displayObject.height, displayObject.width
 
-    physics.addBody(displayObject, "dynamic", { fixedRotation = true, friction = 1, density=1.0, shape = {
+    local collisionFilter = { categoryBits = 2, maskBits = 5 } -- collides with player only
+
+    physics.addBody(displayObject, "dynamic", { shape = {
         -- shape is counter-clockwisedly descripted
         -- bottom left corner --
         -w/2, -h/2 + h*percentageOfCut/100,
@@ -93,7 +93,7 @@ function addBodyWithCutCornersRectangle(displayObject, percentageOfCut)
         -- top left corner --
         -w/2 + w*percentageOfCut/100, h/2,
         -w/2, h/2 - h*percentageOfCut/100,
-    }})
+    }, filter=collisionFilter})
     displayObject.isFixedRotation = true
 end
 
