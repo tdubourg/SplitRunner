@@ -1,5 +1,3 @@
-local BonusManagerTimer
-
 BonusManager = {}
 
 BonusManager.__index = BonusManager
@@ -17,6 +15,9 @@ function BonusManager.new(args) -- constructor
 end
 
 function BonusManager:activateBonus(bonus, x, y)
+--    print("BonusManager.activateBonus")
+    --bonus:removeSelf()
+
     if (bonus.effectDone == true) then
        return
     end
@@ -34,15 +35,18 @@ function BonusManager:activateBonus(bonus, x, y)
 end
 
 function BonusManager:removeBonus(bonus)
+    print("BonusManager.activateBonus")
     bonus:removeSelf()
 end
 
 function setBonusImages(object)
-
 	if (object.hiddenType == 1) then
         object.image = "fall.png"   
     elseif (object.hiddenType == 2) then
         object.image = "blind.png"   
+
+     elseif (object.hiddenType == 3) then
+        object.image = "speedUp.png"   
     end
 end
 
@@ -53,11 +57,13 @@ local function generateBonus(y)
     object.height = 20;
     object.y = y
     object.x = display.viewableContentWidth + 20
-    object.hiddenType = math.random(1,2)
+    object.hiddenType = math.random(1,3)
     if (object.hiddenType == 1) then
         object:setFillColor ( 255, 0, 0)   
     elseif (object.hiddenType == 2) then
-        object:setFillColor ( 0, 0, 255  )
+        object:setFillColor ( 0, 0, 255 )
+    elseif  (object.hiddenType == 3) then
+    	object:setFillColor ( 0, 255, 0)
     end
     --define images to show per bonus
     setBonusImages(object)
@@ -104,13 +110,7 @@ local function onEnterFrameBonusManager(event)
 end
 
 function BonusManager:cancelTimersAndListeners()
---    for i, bonus in ipairs(bonuses) do
---        if bonus ~= nil then
---            self:removeBonus(bonus)
---        end
---    end
-
-    Runtime:removeEventListener("enterFrame", onEnterFrameBonusManager)
+	Runtime:removeEventListener ( "enterFrame", onEnterFrameBonusManager)
 end
 
 function BonusManager:initTimersAndListeners()

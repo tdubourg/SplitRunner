@@ -1,4 +1,3 @@
-
 local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
 
@@ -331,6 +330,8 @@ function scene:enterScene(event)
 
     Runtime:addEventListener( "enterFrame", onEnterFrameWheels)
     Runtime:addEventListener( "enterFrame", onEnterFrame)
+    Runtime:addEventListener ( "enterFrame", onEnterFrameBG )
+
 end
 
 -- Following methods are MANDATORY event if they are unused. Else it will not be recognized by the storyboard

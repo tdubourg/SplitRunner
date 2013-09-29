@@ -38,7 +38,7 @@ function Player.new(objectType, name, x, y, gravityScale, spriteWidth, spriteHei
     level1SceneBGLayer:insert(self.coronaObject)
     self.coronaObject.x = x
     self.coronaObject.y = y
-    -- self.coronaObject:setFillColor(0, 255, 0)
+
     self.objectType = objectType
     self.coronaObject.objectType = objectType
     self.coronaObject.playerObject = self
@@ -143,9 +143,9 @@ end
 
 function Player:assignBonus(bonus)
     self.currentBonus = bonus
-    print ("my image is "..bonus.image)
+
     if (self.bonusImage ~= nil)then
-    	self.bonusImage:removeSelf()
+     	self.bonusImage:removeSelf()
     end
     self.bonusImage = display.newImage("images/"..bonus.image)
     local variation = display.viewableContentHeight/7
@@ -191,6 +191,12 @@ function Player:activateBonus(gravityScale)
             return
         end
         timer.performWithDelay(5000, stopEffectClosure)
+    elseif (bonus.hiddenType == 3) then
+    	if (self.isPlayer1 == true) then
+    		transition.to (self.coronaObject, {3000, x = self.coronaObject.x+80})
+    	else
+    		transition.to (self.coronaObject, {3000, x = self.coronaObject.x+80})
+    	end
     end
     self.currentBonus = nil
 end
