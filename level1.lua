@@ -206,19 +206,10 @@ end
 
 
 
---[[
-local middleGround = Ground.new()
-middleGround = middleGround:create(display.viewableContentHeight / 2)
-middleGround:setFillColor ( 0, 0, 0  )
-]]
 local middleGround = display.newRect(0 ,0, display.viewableContentWidth * 3, 2);
 middleGround.x = 0
 middleGround.y = display.viewableContentHeight / 2 + 7
 middleGround:setFillColor ( 0, 0, 0  )
-Runtime:addEventListener ( "collision", onCollision )
-
--- Only the background receives touches. 
-background:addEventListener( "touch", onTouch)
 
 
 
