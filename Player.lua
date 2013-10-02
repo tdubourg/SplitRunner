@@ -178,23 +178,24 @@ function Player:activateBonus()
     end
     self.bonusImage:removeSelf()
     self.bonusImage = nil
+    gravityScaleForEffect = -1 * self.coronaObject.gravityScale
     if (bonus.hiddenType == 1) then
         -- For the sake of throwing the obstacle at the ennemy's face, let's reverse the gravity AND
         -- multiply it by a factor
         for i, obstacle in ipairs(obstacles) do
-            obstacle.gravityScale = -1 * self.coronaObject.gravityScale * GRAVITY_OBSTACLES_BONUS_THROWING_MULTIPLYIER
+            obstacle.gravityScale = gravityScaleForEffect * GRAVITY_OBSTACLES_BONUS_THROWING_MULTIPLYIER
         end
         local this = self -- trick to pass the current object instance to the callback function
         local restoreObstacleNormalGravityAfterGravityBonus = function()
             for i, obstacle in ipairs(obstacles) do
-                obstacle.gravityScale = -1 * this.coronaObject.gravityScale
+                obstacle.gravityScale = gravityScaleForEffect
             end
         end
         -- We multiplied gravity by GRAVITY_OBSTACLES_BONUS_THROWING_MULTIPLYIER to throw them rapidly 
         -- gat the ennemy, let's restore their normal ravity after some time
         timer.performWithDelay(500, restoreObstacleNormalGravityAfterGravityBonus)
     elseif (bonus.hiddenType == 2) then
-        local effect = getSmokeWallEffect(gravityScale)
+        local effect = getSmokeWallEffect(gravityScaleForEffect)
         effect:start("smoke")
         local stopEffectClosure = function()
             effect:stop("smoke")
