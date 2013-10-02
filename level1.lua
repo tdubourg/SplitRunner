@@ -174,16 +174,14 @@ function checkSwipeDirection(event)
                 totalSwipeDistanceUp = event.yStart - event.y
                 if totalSwipeDistanceUp > minSwipeDistance then
                     if isPlayer1 == true then
-                        --native.showAlert("test","Player1 Attack")
-                        playerB:activateBonus(-1)
+                        playerB:activateBonus()
                     end
                 end
              else
                 totalSwipeDistanceDown = event.y - event.yStart
                 if totalSwipeDistanceDown > minSwipeDistance then
                    if isPlayer2 == true then
-                        --native.showAlert("test","Player2 Attack")
-                       playerT:activateBonus(1)
+                       playerT:activateBonus()
                    end
                 end
              end
@@ -337,26 +335,13 @@ end
 -- Following methods are MANDATORY event if they are unused. Else it will not be recognized by the storyboard
 function scene:createScene( event )
     updateLastTime = system.getTimer()
-    print("createScene")
     gameIsOver = false
     level1Scene = self.view
     level1SceneBGLayer = display.newGroup()
+    level1SceneBGBGLayer = display.newGroup()
     level1SceneFrontLayer = display.newGroup()
 
-    local plainBG = display.newRect(level1Scene, 0, 0, display.viewableContentWidth * 3, display.viewableContentHeight * 2)
-    plainBG.x = 0
-    plainBG.y = 0
-    plainBG:setFillColor( 83, 71, 65)
-
-
-
-    middleGround = display.newRect(0 ,0, display.viewableContentWidth * 3, 2);
-    middleGround.x = 0
-    middleGround.y = display.viewableContentHeight / 2 + 7
-    middleGround:setFillColor ( 0, 0, 0  )
-
-
-    setBackgrounds(level1Scene)
+    setBackgrounds(level1SceneBGLayer)
     playerB = Player.new("player", "Player 1", playerSpawn, PLAYER_BOTTOM_SPAWNY, 1, pW, pH)
     playerT = Player.new("player", "Player 2", playerSpawn, PLAYER_TOP_SPAWNY, -1, pW, pH)
     obstacles = {}
@@ -382,13 +367,14 @@ function scene:createScene( event )
     Runtime:addEventListener ( "collision", onCollision )
 
     -- Only the background receives touches.
+    level1SceneBGBGLayer:insert(background)
     background:addEventListener( "touch", onTouch)
+    level1Scene:insert(level1SceneBGBGLayer)
     level1Scene:insert(level1SceneBGLayer)
     level1Scene:insert(level1SceneFrontLayer)
 end
 
 function scene:exitScene( event )
-    middleGround:removeSelf()
     timer.cancel(MainUpdateTimer)
     timer.cancel(ObstacleTimer)
     background:removeEventListener("touch", swipe)
