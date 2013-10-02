@@ -1,6 +1,5 @@
 local physics = require( "physics" )
 require("utils")
---physics.setDrawMode("hybrid") -- debug purpose only
 Player = {}
 
 Player.__index = Player
@@ -18,6 +17,7 @@ PLAYER_SPRITE_RAW_HEIGHT = 200
 PLAYER_JUMP_STATE = 42
 PLAYER_RUN_STATE = 43
 POSITIVE_X_VELOCITY_FRICTION_COUNTER_BALANCE = 0.08
+GRAVITY_OBSTACLES_BONUS_THROWING_MULTIPLYIER = 8
 
 local PLAYER_SPRITE_SEQUENCE_DATA = {
     { name="normalRun", start=1, count=8, time=400},
@@ -43,16 +43,16 @@ function Player.new(objectType, name, x, y, gravityScale, spriteWidth, spriteHei
     self.coronaObject.objectType = objectType
     self.coronaObject.playerObject = self
     self.coronaObject.width, self.coronaObject.height = spriteWidth, spriteHeight
-    self.coronaObject.xScale, self.coronaObject.yScale = spriteWidth / PLAYER_SPRITE_RAW_WIDTH,
-    signof(gravityScale) * spriteHeight / PLAYER_SPRITE_RAW_HEIGHT
+    self.coronaObject.xScale = spriteWidth / PLAYER_SPRITE_RAW_WIDTH
+    self.coronaObject.yScale = signof(gravityScale) * spriteHeight / PLAYER_SPRITE_RAW_HEIGHT
     addBodyWithCutCornersRectangle(self.coronaObject, 30)
     self.bonusImage = nil
     self.coronaObject:play()
-	if (gravityScale == 1) then
-		self.isPlayer1 = true
-	else
-		self.isPlayer2 = true
-	end
+    if (gravityScale == 1) then
+        self.isPlayer1 = true
+    else
+        self.isPlayer2 = true
+    end
     self.coronaObject.gravityScale = gravityScale
     return self
 end
@@ -145,43 +145,55 @@ function Player:assignBonus(bonus)
     self.currentBonus = bonus
 
     if (self.bonusImage ~= nil)then
-     	self.bonusImage:removeSelf()
+        self.bonusImage:removeSelf()
     end
-    self.bonusImage = display.newImage("images/"..bonus.image)
+    self.bonusImage = display.newImage("images/" .. bonus.image)
     local variation = display.viewableContentHeight/7
     if (self.isPlayer1) then
-		self.bonusImage.x = 45
-		self.bonusImage.y = display.viewableContentHeight/2 + variation
+        self.bonusImage.x = 45
+        self.bonusImage.y = display.viewableContentHeight/2 + variation
     else
-    	self.bonusImage.x = display.viewableContentWidth - 45
-    	self.bonusImage.y = display.viewableContentHeight/2 - variation
-    	self.bonusImage.yScale = -1
+        self.bonusImage.x = display.viewableContentWidth - 45
+        self.bonusImage.y = display.viewableContentHeight/2 - variation
+        self.bonusImage.yScale = -1
     end
-    	self.bonusImage.width = display.viewableContentHeight/7
-		self.bonusImage.height = self.bonusImage.width
+    self.bonusImage.width = display.viewableContentHeight/7
+    self.bonusImage.height = self.bonusImage.width
 
-        level1SceneBGLayer:insert(self.bonusImage)
+    self.bonusImage:addEventListener("touch", function ( evt )
+            activateBonusOnPlayer(self)
+    end
+        )
+    level1SceneBGLayer:insert(self.bonusImage)
 end
 
-function Player:activateBonus(gravityScale)
+function activateBonusOnPlayer( player )
+    player:activateBonus()
+end
+
+function Player:activateBonus()
     local bonus = self.currentBonus
     if (bonus == nil) then
        return
     end
-    print("removeImage"..self.bonusImage.x)
     self.bonusImage:removeSelf()
     self.bonusImage = nil
     if (bonus.hiddenType == 1) then
+        -- For the sake of throwing the obstacle at the ennemy's face, let's reverse the gravity AND
+        -- multiply it by a factor
         for i, obstacle in ipairs(obstacles) do
-            obstacle.gravityScale = gravityScale * 8
+            obstacle.gravityScale = -1 * self.coronaObject.gravityScale * GRAVITY_OBSTACLES_BONUS_THROWING_MULTIPLYIER
         end
-        local restoreObstacleGravityClosure = function()
+        local this = self -- trick to pass the current object instance to the callback function
+        local restoreObstacleNormalGravityAfterGravityBonus = function()
             for i, obstacle in ipairs(obstacles) do
-                obstacle.gravityScale = gravityScale
+                obstacle.gravityScale = -1 * this.coronaObject.gravityScale
             end
         end
-        timer.performWithDelay(500, restoreObstacleGravityClosure)
-    elseif (bonus.hiddenType == 2)then
+        -- We multiplied gravity by GRAVITY_OBSTACLES_BONUS_THROWING_MULTIPLYIER to throw them rapidly 
+        -- gat the ennemy, let's restore their normal ravity after some time
+        timer.performWithDelay(500, restoreObstacleNormalGravityAfterGravityBonus)
+    elseif (bonus.hiddenType == 2) then
         local effect = getSmokeWallEffect(gravityScale)
         effect:start("smoke")
         local stopEffectClosure = function()
@@ -192,11 +204,11 @@ function Player:activateBonus(gravityScale)
         end
         timer.performWithDelay(5000, stopEffectClosure)
     elseif (bonus.hiddenType == 3) then
-    	if (self.isPlayer1 == true) then
-    		transition.to (self.coronaObject, {3000, x = self.coronaObject.x+80})
-    	else
-    		transition.to (self.coronaObject, {3000, x = self.coronaObject.x+80})
-    	end
+        if (self.isPlayer1 == true) then
+            transition.to (self.coronaObject, {3000, x = self.coronaObject.x+80})
+        else
+            transition.to (self.coronaObject, {3000, x = self.coronaObject.x+80})
+        end
     end
     self.currentBonus = nil
 end
