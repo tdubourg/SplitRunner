@@ -13,6 +13,8 @@ PLAYER_HEIGHT_IN_PERCENTAGE = 10
 
 PLAYER_SPRITE_RAW_WIDTH = 200
 PLAYER_SPRITE_RAW_HEIGHT = 200
+PLAYER_SPRITESHEET_WIDTH = 2400
+PLAYER_SPRITESHEET_HEIGHT = 200
 
 PLAYER_JUMP_STATE = 42
 PLAYER_RUN_STATE = 43
@@ -32,7 +34,7 @@ function Player.new(objectType, name, x, y, gravityScale, spriteWidth, spriteHei
     self.name = name
     self.coronaObject = nil
     local imageSheet = graphics.newImageSheet("images/player_spritesheet.png", {width = PLAYER_SPRITE_RAW_WIDTH,
-        height = PLAYER_SPRITE_RAW_HEIGHT, numFrames = 12, sheetContentWidth=2400, sheetContentHeight=200})
+        height = PLAYER_SPRITE_RAW_HEIGHT, numFrames = 12, sheetContentWidth=PLAYER_SPRITESHEET_WIDTH, sheetContentHeight=PLAYER_SPRITESHEET_HEIGHT})
 
     self.coronaObject = display.newSprite(imageSheet, PLAYER_SPRITE_SEQUENCE_DATA)
     level1SceneBGLayer:insert(self.coronaObject)
