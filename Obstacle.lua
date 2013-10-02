@@ -25,7 +25,6 @@ function Obstacle:create()
         obstaclesB = obstaclesB + 1
         targetY = targetY + targetYOffset
     end
-    print (obstaclesB)
     random = math.random()
     local isLarge = false
     local imageUrl = "assets/crate-"
@@ -57,6 +56,5 @@ function Obstacle:create()
     physics.addBody( obstacle, "dynamic", { friction=1, bounce=0 } )
     obstacle.gravityScale = gravityScale
     level1SceneBGLayer:insert(obstacle)
-    print("Je suis la")
     return obstacle
 end
