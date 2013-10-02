@@ -47,6 +47,11 @@ function setBackgrounds(group)
 	--Globals
 	backgroundSpeed = (.25)
 	midBackgroundSpeed = (.5)
+
+    local plainBG = display.newRect(level1SceneBGBGLayer, 0, 0, display.viewableContentWidth * 3, display.viewableContentHeight * 2)
+    plainBG.x = 0
+    plainBG.y = 0
+    plainBG:setFillColor( 83, 71, 65)
 		
 	--load BGs images and set their positions
     local yOffset = 34
