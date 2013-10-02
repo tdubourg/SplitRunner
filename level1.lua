@@ -29,7 +29,9 @@ local xDistance
 local yDistance
  
 local bDoingTouch
-local minSwipeDistance = 80
+-- The minimum swipe distance in order to trigger a swipe event. In percentage of the height of the scene
+-- (scene = half of the screen, as the screen is split into two scene, for each player)
+local MIN_SWIPE_DISTANCE_IN_PERC_OF_HEIGHT_OF_SCENE = 0.1
 local totalSwipeDistanceLeft
 local totalSwipeDistanceRight
 local totalSwipeDistanceUp
@@ -152,7 +154,7 @@ function checkSwipeDirection(event)
         if xDistance > yDistance then
         	if event.xStart > event.x then
                     totalSwipeDistanceLeft = event.xStart - event.x
-                if totalSwipeDistanceLeft > minSwipeDistance then
+                if totalSwipeDistanceLeft > MIN_SWIPE_DISTANCE_IN_PERC_OF_HEIGHT_OF_SCENE then
                 if isPlayer1 == true then
                     --native.showAlert("test","Swiped Left Player1")
                 else
@@ -161,7 +163,7 @@ function checkSwipeDirection(event)
                 end
             else
                 totalSwipeDistanceRight = event.x - event.xStart
-                if totalSwipeDistanceRight > minSwipeDistance then
+                if totalSwipeDistanceRight > MIN_SWIPE_DISTANCE_IN_PERC_OF_HEIGHT_OF_SCENE then
                     if isPlayer1 == true then
                         --native.showAlert("test","Swiped Right Player1")
                     else
@@ -172,14 +174,14 @@ function checkSwipeDirection(event)
         else
          if event.yStart > event.y then
                 totalSwipeDistanceUp = event.yStart - event.y
-                if totalSwipeDistanceUp > minSwipeDistance then
+                if totalSwipeDistanceUp > MIN_SWIPE_DISTANCE_IN_PERC_OF_HEIGHT_OF_SCENE then
                     if isPlayer1 == true then
                         playerB:activateBonus()
                     end
                 end
              else
                 totalSwipeDistanceDown = event.y - event.yStart
-                if totalSwipeDistanceDown > minSwipeDistance then
+                if totalSwipeDistanceDown > MIN_SWIPE_DISTANCE_IN_PERC_OF_HEIGHT_OF_SCENE then
                    if isPlayer2 == true then
                        playerT:activateBonus()
                    end
